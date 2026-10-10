@@ -154,10 +154,28 @@ model Proposition {
   predicate: Predicate;
   relation: Relation;
 
-  /** A lattice element (e.g. `per-request`), a number for `bound`, or a boolean for `purity`. */
+  /**
+   * The value, read on the predicate's lattice:
+   *
+   * - `freshness`: `per-call`, `per-request`, `per-session`, `static`, or `ttl:<seconds>`;
+   * - `consistency`: `eventual`, `read-your-writes`, `linearizable`, or `bounded:<seconds>`;
+   * - `authority`: the writer set, comma-separated (`a,b`);
+   * - `shape`: a JSON-encoded structural type;
+   * - `ordering`: with `before` or `after`, the subject is the first event and the value the second;
+   * - `bound`: a number, in `unit`;
+   * - `purity`, `idempotent`, `presence`: a boolean.
+   *
+   * `is` means exactly the value; `not` means its complement.
+   */
   value: string | float64 | boolean;
 
-  /** Where the proposition holds, e.g. a route prefix or tenant class. */
+  /** The unit of a `bound` value, e.g. `ms`, `bytes`, `requests/s`. */
+  unit?: string;
+
+  /**
+   * Where the proposition holds, as `;`-separated `key:value` pairs, e.g.
+   * `env:prod|staging;tenant:t1`. Absent means everywhere.
+   */
   scope?: string;
 
   anchors?: Anchor[];

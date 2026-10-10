@@ -1,6 +1,6 @@
 {
   "name": "@bimsonz/mfp",
-  "version": "0.1.0-pre",
+  "version": "0.1.0-pre.2",
   "description": "MFP, the Model Feedback Protocol: an open format for the claims a model makes about its work",
   "license": "MIT",
   "type": "module",

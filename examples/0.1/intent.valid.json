@@ -20,7 +20,7 @@
         "relation": "at-most",
         "value": "per-request",
         "gloss": "requirePermission re-reads roles on every request",
-        "strength": "required"
+        "strength": "must"
       }
     ]
   }

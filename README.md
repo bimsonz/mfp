@@ -39,7 +39,7 @@ From TypeSpec, add the repository as a dependency pinned by tag and import it:
 
 ```jsonc
 // package.json
-"@bimsonz/mfp": "github:bimsonz/mfp#v0.1.0-pre"
+"@bimsonz/mfp": "github:bimsonz/mfp#v0.1.0-pre.2"
 ```
 
 ```tsp

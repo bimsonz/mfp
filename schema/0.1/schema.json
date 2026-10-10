@@ -242,14 +242,15 @@
                     "anyOf": [
                         {
                             "type": "string",
-                            "const": "required"
+                            "const": "must"
                         },
                         {
                             "type": "string",
-                            "const": "preferred"
+                            "const": "should"
                         }
                     ],
-                    "description": "Whether the holder breaks (`required`) or merely degrades (`preferred`) if it is false."
+                    "default": "must",
+                    "description": "The holder's declared kind of reliance, not a confidence. `must`: the\nholder breaks if the proposition is false. `should`: it degrades. A\ncontradiction of a `should` premise is reported as suspect rather than as\na conflict. Comparison never reads it."
                 },
                 "cites": {
                     "type": "array",

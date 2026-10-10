@@ -165,8 +165,13 @@ model Proposition {
   /** A one-line human gloss. */
   gloss?: string;
 
-  /** Whether the holder breaks (`required`) or merely degrades (`preferred`) if it is false. */
-  strength?: "required" | "preferred";
+  /**
+   * The holder's declared kind of reliance, not a confidence. `must`: the
+   * holder breaks if the proposition is false. `should`: it degrades. A
+   * contradiction of a `should` premise is reported as suspect rather than as
+   * a conflict. Comparison never reads it.
+   */
+  strength?: "must" | "should" = "must";
 
   cites?: Citation[];
 }

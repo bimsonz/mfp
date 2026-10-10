@@ -1,0 +1,40 @@
+{
+  "name": "@bimsonz/mfp",
+  "version": "0.1.0-pre",
+  "description": "MFP, the Model Feedback Protocol: an open format for the claims a model makes about its work",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bimsonz/mfp.git"
+  },
+  "packageManager": "pnpm@11.18.0",
+  "tspMain": "schema/0.1/main.tsp",
+  "exports": {
+    ".": {
+      "typespec": "./schema/0.1/main.tsp",
+      "default": "./schema/0.1/schema.json"
+    },
+    "./schema/0.1/schema.json": "./schema/0.1/schema.json"
+  },
+  "files": [
+    "schema/0.1/main.tsp",
+    "schema/0.1/schema.json"
+  ],
+  "scripts": {
+    "build:schema": "tsp compile schema/0.1/main.tsp --config tspconfig.yaml",
+    "check:drift": "pnpm build:schema && git diff --exit-code -- schema/0.1/schema.json",
+    "conformance": "vitest run"
+  },
+  "peerDependencies": {
+    "@typespec/compiler": "^1.17.0",
+    "@typespec/json-schema": "^1.17.0"
+  },
+  "devDependencies": {
+    "@typespec/compiler": "1.17.0",
+    "@typespec/json-schema": "1.17.0",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "vitest": "5.0.3"
+  }
+}

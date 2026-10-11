@@ -51,7 +51,8 @@ describe("T14: requests carry the committed schemas, unmodified", () => {
     expect([request.response_format, request.tools]).toEqual([undefined, undefined]);
   });
 
-  it.each(rows("json_schema"))("json_schema %s passes the committed emit schema", (_, request, task) => {
+  it.each(rows("json_schema"))("json_schema %s passes the committed emit schema, and shows it", (_, request, task) => {
+    expect(request.messages[0].content.endsWith(committedText(`schema/0.2/emit/${task.kind}.schema.json`))).toBe(true);
     expect(request.response_format).toEqual({
       type: "json_schema",
       json_schema: { name: `mfp_${task.kind}`, strict: true, schema: readJson(`schema/0.2/emit/${task.kind}.schema.json`) },

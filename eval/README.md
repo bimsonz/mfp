@@ -12,7 +12,7 @@ It asks real models to report in MFP, for a fixed set of coding tasks, through e
   | Mode | The model is given |
   |---|---|
   | `prompt` | The kind's emit schema in the system prompt, and an instruction to reply with one JSON object only. No constrained decoding. |
-  | `json_schema` | The kind's emit schema as `response_format` (structured output), and the instruction to reply with a message of that kind. |
+  | `json_schema` | The kind's emit schema as `response_format` (structured output), and the same schema in the system prompt, as [bindings.md](../docs/specification/0.2/bindings.md#structured-output) asks. |
   | `tool` | The kind's MCP tool as a function, and the instruction to report by calling it. The model may also answer without calling it. |
 
 - **Models.** Each runs through the Workers AI binding of a local Worker ([`worker/`](worker)) under `wrangler dev`, which runs inference on the account wrangler is logged in to. Nothing is deployed.
@@ -45,7 +45,9 @@ Scoring runs over the recorded responses, so a change to scoring rescores a run 
 ```sh
 CLOUDFLARE_ACCOUNT_ID=<account> pnpm eval:worker     # terminal 1: the Worker, under wrangler dev
 pnpm eval:run -- --date 2026-10-11 --samples 3        # terminal 2: resumable; stops at 1,000 calls
-pnpm eval:summarize -- --date 2026-10-11             # writes RESULTS.md
+pnpm eval:summarize -- --date 2026-10-11             # writes results/2026-10-11/RESULTS.md, and RESULTS.md for the latest run
 ```
 
-Raw responses are kept in `results/<date>/<model>.jsonl`, with the run's settings in `results/<date>/run.json`.
+Raw responses are kept in `results/<run>/<model>.jsonl`, with the run's settings in `results/<run>/run.json` and its report in `results/<run>/RESULTS.md`.
+
+A run that tests a change names the run it is compared with: `--baseline 2026-10-11`. Its `run.json` says, under `changes`, what changed in each mode, and its report puts each mode's valid rate before and after side by side.

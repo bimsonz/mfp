@@ -23,9 +23,11 @@ Strict structured-output modes accept only a subset of JSON Schema, and treat pa
 - makes every property required, an optional member being *nullable*: `anyOf: [<schema>, {"type": "null"}]`;
 - spells each constant as a single-value `enum`, never `const`;
 - is self-contained: its `$defs` are local, and every `$ref` is `#/$defs/<name>`;
-- uses only these keywords: `type`, `properties`, `required`, `additionalProperties`, `items`, `enum`, `anyOf`, `$ref`, `$defs`, `description`, `pattern`, `minItems`.
+- uses only these keywords: `type`, `properties`, `required`, `additionalProperties`, `items`, `enum`, `anyOf`, `$ref`, `$defs`, `description`, `minItems`.
 
-The keywords the emit form drops (`minLength`, `uniqueItems`, `format`, `default`) are still enforced by the wire schema, when the driver checks what the model emitted.
+The emit form carries no `pattern`. A constrained decoder matches a pattern against the whole string, where JSON Schema searches the string for it. So `\S` ("some non-space character") admits exactly one character, and a grammar with no end lets the decoder extend a string until the token limit. Each definition whose wire form has a pattern states its grammar in its `description` instead.
+
+The keywords the emit form drops (`pattern`, `minLength`, `uniqueItems`, `format`, `default`) are still enforced by the wire schema, when the driver checks what the model emitted.
 
 Members come in the order a model should write them: a proposition's subject, predicate, relation and value before its details; a message's report before its `cites` and `confidence`.
 
@@ -43,13 +45,17 @@ import { toWire, toEmit } from "@bimsonz/mfp/emit";
 
 ## Structured output
 
-A driver that wants a report of one kind asks for structured output with that kind's emit schema, unmodified, named `mfp_<kind>`. With an OpenAI-compatible chat completions API:
+A driver that wants a report of one kind asks for structured output with that kind's emit schema, unmodified, named `mfp_<kind>`.
+
+The driver SHOULD also put the emit schema in the prompt. Some providers enforce a structured-output schema without showing it to the model, which must then fill each member without its description: what a member means, and the grammar its value follows.
+
+With an OpenAI-compatible chat completions API:
 
 ```json
 {
   "model": "<model>",
   "messages": [
-    { "role": "system", "content": "Before you change code, report each thing you rely on about code you do not own as an MFP premise." },
+    { "role": "system", "content": "Before you change code, report each thing you rely on about code you do not own as an MFP premise, valid against this JSON Schema: <schema/0.2/emit/premise.schema.json>" },
     { "role": "user", "content": "Revocation must take effect on the collaborator's next request. requirePermission in src/authz/check.ts re-reads roles on every request." }
   ],
   "response_format": {
@@ -102,12 +108,12 @@ A reply that fails validation is not a message. The driver SHOULD give the model
 
 A provider that does not enforce the schema, or enforces only part of it, is still bound by this: the driver validates every reply.
 
-A driver that cannot constrain decoding at all MAY include the emit schema in the prompt and parse the reply as JSON. The same transform and validation apply.
+A driver that cannot constrain decoding at all puts the emit schema in the prompt and parses the reply as JSON. The same transform and validation apply.
 
 ## MCP
 
 A server that receives MFP over MCP offers one tool per kind, named `mfp_<kind>`. Each tool's definition is the committed `mcp/<kind>.tool.json` (or its profile's):
-- `inputSchema` is the kind's emit schema without `mfp`, `kind` and `profile`, which the binding supplies;
+- `inputSchema` is the kind's emit schema without `mfp`, `kind` and `profile`, which the binding supplies. Its `$ref`s are inlined, because some tool formats drop `$defs` when they render a tool for a model. The exception is a kind with a recursive definition, which cannot be inlined: intent and premise, whose shapes nest, keep their `$defs`;
 - `outputSchema` is the receiver's reply, `{ref}`;
 - `description` says what the model reports and when to call the tool. A server MAY add to a description, but SHOULD NOT remove what it says.
 

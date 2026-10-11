@@ -3,11 +3,13 @@
 // eval/results/<date>/<model>.jsonl. A run resumes: jobs already recorded are
 // skipped. Every inference attempt counts towards a hard stop.
 //
-//   node eval/run.ts [--date YYYY-MM-DD] [--samples 3] [--models a,b] [--modes prompt,tool]
-//                    [--tasks id,id] [--prior N] [--concurrency 8]
+//   node eval/run.ts [--date YYYY-MM-DD[-label]] [--samples 3] [--models a,b] [--modes prompt,tool]
+//                    [--tasks id,id] [--prior N] [--concurrency 8] [--baseline <earlier run>]
 //
-// --prior counts inference calls made outside the harness (e.g. smoke calls)
-// towards the hard stop, and records them.
+// --date names the run's directory. --prior counts inference calls made outside
+// the harness (e.g. smoke calls) towards the hard stop, and records them.
+// --baseline names an earlier run this one is compared with. Members of run.json
+// the harness does not set, such as `changes`, are kept.
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { parseArgs } from "node:util";
@@ -36,6 +38,7 @@ const { values } = parseArgs({
     tasks: { type: "string" },
     prior: { type: "string" },
     concurrency: { type: "string", default: String(DEFAULT_CONCURRENCY) },
+    baseline: { type: "string" },
   },
 });
 
@@ -77,7 +80,9 @@ writeFileSync(
   new URL("run.json", dir),
   `${JSON.stringify(
     {
+      ...run,
       date: values.date,
+      commit: execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim(),
       models,
       modes,
       samples,
@@ -87,6 +92,7 @@ writeFileSync(
       compatibility_date: /"compatibility_date":\s*"([^"]+)"/.exec(workerConfig)?.[1],
       prior: values.prior === undefined ? (run.prior ?? 0) : Number(values.prior),
       attempts: run.attempts ?? 0,
+      ...(values.baseline === undefined ? {} : { baseline: values.baseline }),
     },
     null,
     2,

@@ -18,6 +18,7 @@ export declare const BINDING_MEMBERS: string[];
 export declare const BASE: string;
 export declare const CORE: string;
 export declare const emitSchema: (producer: Bundle, kind: string) => EmitSchema;
+export declare const inlineRefs: (schema: EmitSchema) => EmitSchema;
 export declare const mcpTool: (producer: Bundle, kind: string) => McpTool;
 export declare const bindings: (wire: Bundle, producer: Bundle) => { kind: string; schema: EmitSchema; tool: McpTool }[];
 export declare const toWire: (output: unknown, binding?: { kind: string; profile?: string }) => any;

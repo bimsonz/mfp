@@ -133,7 +133,6 @@
     },
     "CommitId": {
       "type": "string",
-      "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$",
       "description": "A git object id: 40 lowercase hex digits (SHA-1) or 64 (SHA-256)."
     },
     "MessageCitation": {
@@ -182,12 +181,10 @@
     },
     "Text": {
       "type": "string",
-      "pattern": "\\S",
       "description": "Text a reader is meant to read: at least one non-space character."
     },
     "Token": {
       "type": "string",
-      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
       "description": "A lowercase token: letters, digits and inner hyphens, e.g. `request-changes`."
     },
     "ToolResultCitation": {

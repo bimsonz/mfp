@@ -26,7 +26,8 @@ const instruction = (kind: string, mode: Mode): string =>
   mode === "prompt"
     ? `Reply with exactly one JSON object and nothing else: an MFP ${kind} message that is valid against this JSON Schema.\n\n${emitText(kind)}`
     : mode === "json_schema"
-      ? `Reply with an MFP ${kind} message.`
+      ? // Constrained decoding enforces the schema without showing it to the model, so the prompt carries it too.
+        `Reply with an MFP ${kind} message that is valid against this JSON Schema.\n\n${emitText(kind)}`
       : `Report it by calling the ${toolFor(kind).name} tool.`;
 
 /** The `input` for `env.AI.run`: chat messages, the shared settings, and the mode's schema or tool. */

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { bindings, emitSchema, mcpTool, PORTABLE, toEmit, toWire } from "../lib/emit.js";
+import { bindings, emitSchema, inlineRefs, mcpTool, PORTABLE, toEmit, toWire } from "../lib/emit.js";
 import { ajvWith, kindsOf, loadWire, producerSchema, validatorFor } from "../lib/profile.js";
 import { jsonFiles, readJson, root } from "./support.ts";
 
@@ -80,12 +80,40 @@ describe("T8: the transform round-trips every valid example", () => {
 });
 
 describe("T9: an emit schema admits nothing a producer must not emit", () => {
-  // Defects only a keyword the emit form strips (minLength, uniqueItems, format)
-  // could catch; the wire check after toWire catches them. None today.
-  const STRIPPED_ONLY: string[] = [];
+  // Defects only a keyword the emit form strips (pattern, minLength, uniqueItems,
+  // format) could catch; the wire check after toWire catches them.
+  const STRIPPED_ONLY = [
+    "intent.freshness-typo.json",
+    "intent.premise-invalidation.json",
+    "intent.short-commit.json",
+    "premise.scope-grammar.json",
+    "premise.subject-case.json",
+  ];
   it.each(invalid.filter(([name]) => !STRIPPED_ONLY.includes(name)))("%s", (_, c) => {
     const schema = emitSchema(producer, c.message.kind);
     expect(emitValidator(schema)(toEmit(c.message, schema))).toBe(false);
+  });
+  it.each(invalid.filter(([name]) => STRIPPED_ONLY.includes(name)))("%s passes the emit schema and fails on the wire", (_, c) => {
+    const schema = emitSchema(producer, c.message.kind);
+    const output = toEmit(c.message, schema);
+    expect(emitValidator(schema)(output)).toBe(true);
+    expect(onWire(toWire(output))).toBe(false);
+  });
+});
+
+/** Where a schema constrains a string with a pattern. */
+const patterned = (s: object) => [...nodes(s)].filter(([, node]) => "pattern" in node).map(([at]) => at);
+
+describe("T19: the emit form leaves patterns to the wire", () => {
+  it.each(generated)("$kind has no pattern in its emit schema or tool", ({ schema, tool }) => {
+    expect([...patterned(schema), ...patterned(tool.inputSchema)]).toEqual([]);
+  });
+  it.each(generated)("$kind describes, in words, every grammar it no longer enforces", ({ schema }) => {
+    const undescribed = Object.entries(schema.$defs as Record<string, any>)
+      .filter(([name]) => typeof producer.$defs[name]?.pattern === "string")
+      .filter(([, def]) => !(typeof def.description === "string" && def.description.length > 20))
+      .map(([name]) => name);
+    expect(undescribed).toEqual([]);
   });
 });
 
@@ -98,9 +126,29 @@ describe("T10: MCP tools", () => {
     // The binding supplies these, so the model is never asked for them.
     const supplied = ["mfp", "kind", "profile"];
     const without = Object.fromEntries(Object.entries(schema.properties).filter(([n]) => !supplied.includes(n)));
-    expect(tool.inputSchema.properties).toEqual(without);
-    expect(tool.inputSchema.required).toEqual(Object.keys(without));
-    expect(tool.inputSchema.$defs).toEqual(schema.$defs);
+    const { properties: _, required: __, ...rest } = schema;
+    expect(tool.inputSchema).toEqual(inlineRefs({ ...rest, properties: without, required: Object.keys(without) }));
+    expect(Object.keys(tool.inputSchema.properties)).toEqual(Object.keys(without));
+  });
+
+  // A tool format that drops $defs still shows the model every member's shape,
+  // unless the kind has a recursive def (a shape inside a shape), which cannot be inlined.
+  const RECURSIVE = ["intent", "premise"];
+  it.each(generated.filter(({ kind }) => !RECURSIVE.includes(kind)))("$kind's input is inlined", ({ tool }) => {
+    const refs = [...nodes(tool.inputSchema)].filter(([, node]) => "$ref" in node);
+    expect([refs.length, tool.inputSchema.$defs]).toEqual([0, undefined]);
+  });
+  it.each(generated.filter(({ kind }) => RECURSIVE.includes(kind)))("$kind's input keeps its defs, since a shape nests", ({ tool }) => {
+    expect(Object.keys(tool.inputSchema.$defs)).toContain("Shape");
+  });
+  it("leaves a recursive schema as it is, wherever the recursion runs", () => {
+    const tree = {
+      type: "object",
+      properties: { root: { $ref: "#/$defs/Node" } },
+      required: ["root"],
+      $defs: { Node: { type: "object", properties: { children: { type: "array", items: { anyOf: [{ $ref: "#/$defs/Node" }] } } } } },
+    };
+    expect(inlineRefs(tree as any)).toBe(tree);
   });
 
   it.each(generated)("$kind says what the model reports and when to call it", ({ tool }) => {

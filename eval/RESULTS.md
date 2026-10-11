@@ -2,6 +2,8 @@
 
 Whether models emit MFP 0.2 validly, per kind, through each binding. A response is **valid** when, after `toWire`, it is a message of the task's kind that is valid on the wire and under the core producer schema, and cites only refs the task issued. Each cell is valid/n. See [README.md](README.md) for the method.
 
+This is run `2026-10-11`. Each run's own report is `results/<run>/RESULTS.md`, beside its raw responses.
+
 ## Findings
 
 Each cell below is small: 9 responses per model, mode and kind (3 tasks × 3 samples), and 54 per model and mode. A difference of one or two in a cell is noise.

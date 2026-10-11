@@ -483,7 +483,6 @@
       },
       "CommitId": {
         "type": "string",
-        "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$",
         "description": "A git object id: 40 lowercase hex digits (SHA-1) or 64 (SHA-256)."
       },
       "ConsistencyPremise": {
@@ -588,7 +587,6 @@
       },
       "ConsistencyValue": {
         "type": "string",
-        "pattern": "^(?:eventual|read-your-writes|linearizable|bounded:[0-9]+(?:\\.[0-9]+)?)$",
         "description": "How strong a reader's view of the subject is, from weakest to strongest:\n`eventual`, `bounded:<seconds>` (a smaller bound is stronger),\n`read-your-writes` and `linearizable`."
       },
       "FreshnessPremise": {
@@ -693,7 +691,6 @@
       },
       "FreshnessValue": {
         "type": "string",
-        "pattern": "^(?:per-call|per-request|per-session|static|ttl:[0-9]+(?:\\.[0-9]+)?)$",
         "description": "How stale a reader of the subject can be, from least to most:\n`per-call`, `per-request`, `per-session`, `ttl:<seconds>` and `static`."
       },
       "IdempotentPremise": {
@@ -1362,7 +1359,6 @@
       },
       "Scope": {
         "type": "string",
-        "pattern": "^[a-z0-9][a-z0-9._-]*:[a-z0-9][a-z0-9._-]*(?:\\|[a-z0-9][a-z0-9._-]*)*(?:;[a-z0-9][a-z0-9._-]*:[a-z0-9][a-z0-9._-]*(?:\\|[a-z0-9][a-z0-9._-]*)*)*$",
         "description": "Where a proposition holds, as `;`-separated `dimension:atom|atom` parts, e.g.\n`env:prod|staging;tenant:t1`. A dimension appears at most once. Absent means\neverywhere."
       },
       "Shape": {
@@ -1510,12 +1506,10 @@
       },
       "SubjectKey": {
         "type": "string",
-        "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$",
         "description": "A named concept in the codebase, as dot-separated segments of lowercase\nletters, digits and inner hyphens, e.g. `authz.permission-evaluation`. Keys\nare hierarchical: `authz` is an ancestor of `authz.permission-evaluation`."
       },
       "Text": {
         "type": "string",
-        "pattern": "\\S",
         "description": "Text a reader is meant to read: at least one non-space character."
       },
       "ToolResultCitation": {
@@ -1562,12 +1556,10 @@
       },
       "Unit": {
         "type": "string",
-        "pattern": "^\\S+$",
         "description": "A unit of measure, e.g. `ms`, `bytes`, `requests/s`."
       },
       "Writer": {
         "type": "string",
-        "pattern": "^[^\\s,]+$",
         "description": "A writer of a subject: a name with no spaces or commas."
       }
     }

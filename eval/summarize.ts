@@ -1,9 +1,11 @@
-// Scores a run's raw responses and writes eval/RESULTS.md.
+// Scores a run's raw responses and writes its report, results/<run>/RESULTS.md.
+// The latest run's report is also eval/RESULTS.md.
 //
-//   node eval/summarize.ts [--date YYYY-MM-DD]
+//   node eval/summarize.ts [--date <run>]
 //
 // Every rate is printed with its n. Scoring happens here, not in the run, so a
-// scoring fix rescores the same responses without new inference.
+// scoring fix rescores the same responses without new inference. A run whose
+// run.json names a baseline is compared with it, rescored the same way.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
 import type { Mode, Task } from "./requests.ts";
@@ -15,7 +17,8 @@ const USD_PER_KILONEURON = 0.011;
 const root = new URL("../", import.meta.url);
 const runs = readdirSync(new URL("eval/results/", root)).toSorted();
 const { values } = parseArgs({ options: { date: { type: "string", default: runs.at(-1) } } });
-const dir = new URL(`eval/results/${values.date}/`, root);
+const dirOf = (date: string) => new URL(`eval/results/${date}/`, root);
+const dir = dirOf(values.date!);
 const run = JSON.parse(readFileSync(new URL("run.json", dir), "utf8"));
 const tasks: Task[] = JSON.parse(readFileSync(new URL("eval/tasks.json", root), "utf8")).tasks;
 const kinds = [...new Set(tasks.map((t) => t.kind))];
@@ -34,27 +37,30 @@ type Row = {
   inTokens: number;
   outTokens: number;
 };
-const rows: Row[] = readdirSync(dir)
-  .filter((f) => f.endsWith(".jsonl"))
-  .flatMap((f) => readFileSync(new URL(f, dir), "utf8").split("\n").filter(Boolean))
-  .map((line) => {
-    const r = JSON.parse(line);
-    const task = tasks.find((t) => t.id === r.task)!;
-    const s = score(task, r.mode, r.response);
-    const usage = r.response.output?.usage ?? {};
-    return {
-      model: r.model,
-      mode: r.mode,
-      task,
-      class: s.class,
-      detail: s.detail,
-      thin: s.class === "valid" && oneCharacterProse(task.kind, s.message).length > 0,
-      attempts: r.attempt,
-      neurons: usage.neurons ?? 0,
-      inTokens: usage.prompt_tokens ?? 0,
-      outTokens: usage.completion_tokens ?? 0,
-    };
-  });
+const load = (from: URL): Row[] =>
+  readdirSync(from)
+    .filter((f) => f.endsWith(".jsonl"))
+    .flatMap((f) => readFileSync(new URL(f, from), "utf8").split("\n").filter(Boolean))
+    .map((line) => {
+      const r = JSON.parse(line);
+      const task = tasks.find((t) => t.id === r.task)!;
+      const s = score(task, r.mode, r.response);
+      const usage = r.response.output?.usage ?? {};
+      return {
+        model: r.model,
+        mode: r.mode,
+        task,
+        class: s.class,
+        detail: s.detail,
+        thin: s.class === "valid" && oneCharacterProse(task.kind, s.message).length > 0,
+        attempts: r.attempt,
+        neurons: usage.neurons ?? 0,
+        inTokens: usage.prompt_tokens ?? 0,
+        outTokens: usage.completion_tokens ?? 0,
+      };
+    });
+const rows = load(dir);
+const before = run.baseline === undefined ? [] : load(dirOf(run.baseline));
 
 const models: string[] = run.models.filter((m: string) => rows.some((r) => r.model === m));
 const cell = (xs: Row[]) => {
@@ -65,8 +71,8 @@ const thinCell = (xs: Row[]) => {
   const valid = xs.filter((r) => r.class === "valid");
   return valid.length === 0 ? "n=0" : `${valid.filter((r) => r.thin).length}/${valid.length}`;
 };
-const where = (p: Partial<{ model: string; mode: Mode; kind: string }>) =>
-  rows.filter((r) => (p.model === undefined || r.model === p.model) && (p.mode === undefined || r.mode === p.mode) && (p.kind === undefined || r.task.kind === p.kind));
+const where = (p: Partial<{ model: string; mode: Mode; kind: string }>, from = rows) =>
+  from.filter((r) => (p.model === undefined || r.model === p.model) && (p.mode === undefined || r.mode === p.mode) && (p.kind === undefined || r.task.kind === p.kind));
 
 const lines: string[] = [];
 const out = (s = "") => lines.push(s);
@@ -80,8 +86,10 @@ const table = (head: string[], body: string[][]) => {
 out("# Emit eval results");
 out();
 out(
-  "Whether models emit MFP 0.2 validly, per kind, through each binding. A response is **valid** when, after `toWire`, it is a message of the task's kind that is valid on the wire and under the core producer schema, and cites only refs the task issued. Each cell is valid/n. See [README.md](README.md) for the method.",
+  "Whether models emit MFP 0.2 validly, per kind, through each binding. A response is **valid** when, after `toWire`, it is a message of the task's kind that is valid on the wire and under the core producer schema, and cites only refs the task issued. Each cell is valid/n. See [README.md]({eval}README.md) for the method.",
 );
+out();
+out(`This is run \`${values.date}\`. Each run's own report is \`results/<run>/RESULTS.md\`, beside its raw responses.`);
 out();
 // What the numbers show, written by whoever ran the eval, from results/<date>/notes.md.
 if (existsSync(new URL("notes.md", dir))) {
@@ -89,6 +97,29 @@ if (existsSync(new URL("notes.md", dir))) {
   out();
   out(readFileSync(new URL("notes.md", dir), "utf8").trim());
   out();
+}
+
+if (run.baseline !== undefined) {
+  const readable = (xs: Row[]) => xs.filter((r) => r.class === "valid" && !r.thin).length;
+  const valid = (xs: Row[]) => xs.filter((r) => r.class === "valid").length;
+  const change = (f: (xs: Row[]) => number, p: Parameters<typeof where>[0]) => {
+    const [a, b] = [where(p, before), where(p)];
+    return `${f(a)}/${a.length} → ${f(b)}/${b.length}`;
+  };
+  out(`## Against \`${run.baseline}\``);
+  out();
+  out(
+    `The same models, tasks, samples and settings as run \`${run.baseline}\`, both scored by the same scorer. Each cell is before → after. **Readable** is valid with no prose member one character long.`,
+  );
+  out();
+  table(
+    ["Mode", "What changed", "Valid", "Readable"],
+    modes.map((mode) => [mode, run.changes?.[mode] ?? "nothing", change(valid, { mode }), change(readable, { mode })]),
+  );
+  table(
+    ["Model", ...modes.map((mode) => `${mode}: valid`)],
+    models.map((m) => [`\`${m}\``, ...modes.map((mode) => change(valid, { model: m, mode }))]),
+  );
 }
 
 out("## Run");
@@ -210,5 +241,8 @@ table(
   ]),
 );
 
-writeFileSync(new URL("eval/RESULTS.md", root), `${lines.join("\n").trimEnd()}\n`);
-console.log(`scored ${rows.length} responses from ${values.date}; wrote eval/RESULTS.md`);
+const report = `${lines.join("\n").trimEnd()}\n`;
+writeFileSync(new URL("RESULTS.md", dir), report.replaceAll("{eval}", "../../"));
+const latest = values.date === runs.at(-1);
+if (latest) writeFileSync(new URL("eval/RESULTS.md", root), report.replaceAll("{eval}", ""));
+console.log(`scored ${rows.length} responses from ${values.date}; wrote results/${values.date}/RESULTS.md${latest ? " and eval/RESULTS.md" : ""}`);

@@ -8,7 +8,7 @@
     "additionalProperties": false,
     "properties": {
       "category": {
-        "$ref": "#/$defs/Token",
+        "type": "string",
         "description": "What kind of thing was noticed. Open in the core; a profile may close it."
       },
       "importance": {
@@ -20,10 +20,127 @@
         ]
       },
       "summary": {
-        "$ref": "#/$defs/Text"
+        "type": "string",
+        "description": "Text a reader is meant to read: at least one non-space character."
       },
       "cites": {
-        "$ref": "#/$defs/Citations"
+        "type": "array",
+        "items": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "anchor"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Repository-relative path."
+                },
+                "symbol": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "A symbol within the file, e.g. a function or class name."
+                },
+                "commit": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "A git object id: 40 lowercase hex digits (SHA-1) or 64 (SHA-256)."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "The commit the anchor was read at. Absent means the commit the driver is working against."
+                }
+              },
+              "required": [
+                "kind",
+                "path",
+                "symbol",
+                "commit"
+              ],
+              "description": "A code location the claim rests on.",
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "message"
+                  ]
+                },
+                "ref": {
+                  "type": "string",
+                  "description": "An identifier the driver gave the model: a message, a tool call, an earlier\nMFP message or a decision. A model never invents one."
+                }
+              },
+              "required": [
+                "kind",
+                "ref"
+              ],
+              "description": "A message in the conversation, by the identifier the driver gave it.",
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "tool-result"
+                  ]
+                },
+                "ref": {
+                  "type": "string",
+                  "description": "An identifier the driver gave the model: a message, a tool call, an earlier\nMFP message or a decision. A model never invents one."
+                }
+              },
+              "required": [
+                "kind",
+                "ref"
+              ],
+              "description": "The result of a tool call, by the call's identifier.",
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "record"
+                  ]
+                },
+                "ref": {
+                  "type": "string",
+                  "description": "An identifier the driver gave the model: a message, a tool call, an earlier\nMFP message or a decision. A model never invents one."
+                }
+              },
+              "required": [
+                "kind",
+                "ref"
+              ],
+              "description": "An earlier MFP message, by the identifier its receiver gave it.",
+              "additionalProperties": false
+            }
+          ],
+          "description": "What a claim rests on."
+        },
+        "minItems": 1,
+        "description": "A citation list that must not be empty."
       },
       "confidence": {
         "anyOf": [
@@ -48,158 +165,7 @@
       "summary",
       "cites",
       "confidence"
-    ],
-    "$defs": {
-      "AnchorCitation": {
-        "type": "object",
-        "properties": {
-          "kind": {
-            "type": "string",
-            "enum": [
-              "anchor"
-            ]
-          },
-          "path": {
-            "type": "string",
-            "description": "Repository-relative path."
-          },
-          "symbol": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "A symbol within the file, e.g. a function or class name."
-          },
-          "commit": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/CommitId"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The commit the anchor was read at. Absent means the commit the driver is working against."
-          }
-        },
-        "required": [
-          "kind",
-          "path",
-          "symbol",
-          "commit"
-        ],
-        "description": "A code location the claim rests on.",
-        "additionalProperties": false
-      },
-      "Citation": {
-        "anyOf": [
-          {
-            "$ref": "#/$defs/AnchorCitation"
-          },
-          {
-            "$ref": "#/$defs/MessageCitation"
-          },
-          {
-            "$ref": "#/$defs/ToolResultCitation"
-          },
-          {
-            "$ref": "#/$defs/RecordCitation"
-          }
-        ],
-        "description": "What a claim rests on."
-      },
-      "Citations": {
-        "type": "array",
-        "items": {
-          "$ref": "#/$defs/Citation"
-        },
-        "minItems": 1,
-        "description": "A citation list that must not be empty."
-      },
-      "CommitId": {
-        "type": "string",
-        "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$",
-        "description": "A git object id: 40 lowercase hex digits (SHA-1) or 64 (SHA-256)."
-      },
-      "MessageCitation": {
-        "type": "object",
-        "properties": {
-          "kind": {
-            "type": "string",
-            "enum": [
-              "message"
-            ]
-          },
-          "ref": {
-            "$ref": "#/$defs/Ref"
-          }
-        },
-        "required": [
-          "kind",
-          "ref"
-        ],
-        "description": "A message in the conversation, by the identifier the driver gave it.",
-        "additionalProperties": false
-      },
-      "RecordCitation": {
-        "type": "object",
-        "properties": {
-          "kind": {
-            "type": "string",
-            "enum": [
-              "record"
-            ]
-          },
-          "ref": {
-            "$ref": "#/$defs/Ref"
-          }
-        },
-        "required": [
-          "kind",
-          "ref"
-        ],
-        "description": "An earlier MFP message, by the identifier its receiver gave it.",
-        "additionalProperties": false
-      },
-      "Ref": {
-        "type": "string",
-        "description": "An identifier the driver gave the model: a message, a tool call, an earlier\nMFP message or a decision. A model never invents one."
-      },
-      "Text": {
-        "type": "string",
-        "pattern": "\\S",
-        "description": "Text a reader is meant to read: at least one non-space character."
-      },
-      "Token": {
-        "type": "string",
-        "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
-        "description": "A lowercase token: letters, digits and inner hyphens, e.g. `request-changes`."
-      },
-      "ToolResultCitation": {
-        "type": "object",
-        "properties": {
-          "kind": {
-            "type": "string",
-            "enum": [
-              "tool-result"
-            ]
-          },
-          "ref": {
-            "$ref": "#/$defs/Ref"
-          }
-        },
-        "required": [
-          "kind",
-          "ref"
-        ],
-        "description": "The result of a tool call, by the call's identifier.",
-        "additionalProperties": false
-      }
-    }
+    ]
   },
   "outputSchema": {
     "type": "object",

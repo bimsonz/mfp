@@ -47,10 +47,11 @@ A message carries what the model says, and nothing a receiver must vouch for: no
 | `schema/0.2/mfp.schema.json` | The wire schema (JSON Schema 2020-12), for consumers |
 | `schema/0.2/producer.schema.json` | The producer schema: every object closed, the core profile applied |
 | `schema/0.2/core.profile.json` | The core profile |
+| `schema/0.2/emit/`, `schema/0.2/mcp/` | Per kind: a structured-output schema, and an MCP tool |
 | `examples/0.2/` | Valid messages of every kind |
 | `examples/profiles/` | A neutral example profile, with its messages |
 | `conformance/` | Invalid cases, lattice vectors, and the tests that run them |
-| `lib/`, `bin/` | The profile check, as a library and as `mfp-profile` |
+| `lib/`, `bin/` | The profile check and the emit transform, as libraries and as `mfp-profile` |
 | `proposals/` | Proposed changes |
 
 ## Use it
@@ -61,10 +62,15 @@ From TypeSpec, add the repository as a dependency, pinned by tag, and import it:
 import "@bimsonz/mfp";
 ```
 
-From anything else, validate against `schema/0.2/mfp.schema.json`, as `$defs/Message`. Check a profile with:
+From anything else, validate against `schema/0.2/mfp.schema.json`, as `$defs/Message`.
+
+To have a model report in MFP, give it `schema/0.2/emit/<kind>.schema.json` as a structured-output schema, or offer `schema/0.2/mcp/<kind>.tool.json` as an MCP tool, and run what it emits through `toWire` from `@bimsonz/mfp/emit`. See [Bindings](docs/specification/0.2/bindings.md).
+
+Check a profile, or generate its emit schemas and tools, with:
 
 ```sh
 pnpm exec mfp-profile check profile.json [message.json ...]
+pnpm exec mfp-profile emit profile.json out/
 ```
 
 ## Develop
@@ -72,7 +78,7 @@ pnpm exec mfp-profile check profile.json [message.json ...]
 ```sh
 pnpm install
 pnpm build          # regenerate the schemas from main.tsp
-pnpm conformance    # examples, invalid cases, lattice vectors, profiles
+pnpm conformance    # examples, invalid cases, lattice vectors, profiles, bindings
 pnpm check:drift    # fail if a generated schema is stale
 pnpm typecheck && pnpm lint
 ```

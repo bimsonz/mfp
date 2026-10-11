@@ -1,0 +1,1595 @@
+{
+  "name": "mfp_premise",
+  "title": "Report a premise",
+  "description": "Report one more thing you rely on about code you do not own, found after you reported your intent. Call this as soon as you start relying on it.",
+  "inputSchema": {
+    "type": "object",
+    "description": "One more thing the model relies on, after its intent.",
+    "additionalProperties": false,
+    "properties": {
+      "premise": {
+        "$ref": "#/$defs/PremiseProposition"
+      },
+      "cites": {
+        "anyOf": [
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Citation"
+            }
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "confidence": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "The model's own confidence in this report. An opinion about an opinion: it never carries weight."
+      }
+    },
+    "required": [
+      "premise",
+      "cites",
+      "confidence"
+    ],
+    "$defs": {
+      "Anchor": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Repository-relative path."
+          },
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A symbol within the file, e.g. a function or class name."
+          },
+          "commit": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/CommitId"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The commit the anchor was read at. Absent means the commit the driver is working against."
+          }
+        },
+        "required": [
+          "path",
+          "symbol",
+          "commit"
+        ],
+        "description": "A path, and optionally a symbol, in the repository, optionally pinned to a commit.",
+        "additionalProperties": false
+      },
+      "AnchorCitation": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "anchor"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "description": "Repository-relative path."
+          },
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A symbol within the file, e.g. a function or class name."
+          },
+          "commit": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/CommitId"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The commit the anchor was read at. Absent means the commit the driver is working against."
+          }
+        },
+        "required": [
+          "kind",
+          "path",
+          "symbol",
+          "commit"
+        ],
+        "description": "A code location the claim rests on.",
+        "additionalProperties": false
+      },
+      "ArrayShape": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "array"
+            ]
+          },
+          "items": {
+            "$ref": "#/$defs/Shape"
+          }
+        },
+        "required": [
+          "type",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "AuthorityPremise": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "predicate": {
+            "type": "string",
+            "enum": [
+              "authority"
+            ]
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "is",
+              "at-most",
+              "at-least"
+            ]
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Writer"
+            }
+          },
+          "strength": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "must",
+                  "should"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Scope"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A one-line human gloss."
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cites": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "predicate",
+          "relation",
+          "value",
+          "strength",
+          "scope",
+          "gloss",
+          "anchors",
+          "cites"
+        ],
+        "additionalProperties": false
+      },
+      "BoundPremise": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "predicate": {
+            "type": "string",
+            "enum": [
+              "bound"
+            ]
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "is",
+              "at-most",
+              "at-least",
+              "not"
+            ]
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "$ref": "#/$defs/Unit"
+          },
+          "strength": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "must",
+                  "should"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Scope"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A one-line human gloss."
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cites": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "predicate",
+          "relation",
+          "value",
+          "unit",
+          "strength",
+          "scope",
+          "gloss",
+          "anchors",
+          "cites"
+        ],
+        "additionalProperties": false
+      },
+      "CardinalityPremise": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "predicate": {
+            "type": "string",
+            "enum": [
+              "cardinality"
+            ]
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "is",
+              "at-most",
+              "at-least",
+              "not"
+            ]
+          },
+          "value": {
+            "$ref": "#/$defs/CardinalityValue"
+          },
+          "strength": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "must",
+                  "should"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Scope"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A one-line human gloss."
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cites": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "predicate",
+          "relation",
+          "value",
+          "strength",
+          "scope",
+          "gloss",
+          "anchors",
+          "cites"
+        ],
+        "additionalProperties": false
+      },
+      "CardinalityValue": {
+        "type": "string",
+        "enum": [
+          "exactly-once",
+          "at-most-once",
+          "at-least-once",
+          "any"
+        ],
+        "description": "How many times something happens, from strongest guarantee to weakest."
+      },
+      "Citation": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/AnchorCitation"
+          },
+          {
+            "$ref": "#/$defs/MessageCitation"
+          },
+          {
+            "$ref": "#/$defs/ToolResultCitation"
+          },
+          {
+            "$ref": "#/$defs/RecordCitation"
+          }
+        ],
+        "description": "What a claim rests on."
+      },
+      "CommitId": {
+        "type": "string",
+        "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$",
+        "description": "A git object id: 40 lowercase hex digits (SHA-1) or 64 (SHA-256)."
+      },
+      "ConsistencyPremise": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "predicate": {
+            "type": "string",
+            "enum": [
+              "consistency"
+            ]
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "is",
+              "at-most",
+              "at-least",
+              "not"
+            ]
+          },
+          "value": {
+            "$ref": "#/$defs/ConsistencyValue"
+          },
+          "strength": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "must",
+                  "should"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Scope"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A one-line human gloss."
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cites": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "predicate",
+          "relation",
+          "value",
+          "strength",
+          "scope",
+          "gloss",
+          "anchors",
+          "cites"
+        ],
+        "additionalProperties": false
+      },
+      "ConsistencyValue": {
+        "type": "string",
+        "pattern": "^(?:eventual|read-your-writes|linearizable|bounded:[0-9]+(?:\\.[0-9]+)?)$",
+        "description": "How strong a reader's view of the subject is, from weakest to strongest:\n`eventual`, `bounded:<seconds>` (a smaller bound is stronger),\n`read-your-writes` and `linearizable`."
+      },
+      "FreshnessPremise": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "predicate": {
+            "type": "string",
+            "enum": [
+              "freshness"
+            ]
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "is",
+              "at-most",
+              "at-least",
+              "not"
+            ]
+          },
+          "value": {
+            "$ref": "#/$defs/FreshnessValue"
+          },
+          "strength": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "must",
+                  "should"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Scope"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A one-line human gloss."
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cites": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "predicate",
+          "relation",
+          "value",
+          "strength",
+          "scope",
+          "gloss",
+          "anchors",
+          "cites"
+        ],
+        "additionalProperties": false
+      },
+      "FreshnessValue": {
+        "type": "string",
+        "pattern": "^(?:per-call|per-request|per-session|static|ttl:[0-9]+(?:\\.[0-9]+)?)$",
+        "description": "How stale a reader of the subject can be, from least to most:\n`per-call`, `per-request`, `per-session`, `ttl:<seconds>` and `static`."
+      },
+      "IdempotentPremise": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "predicate": {
+            "type": "string",
+            "enum": [
+              "idempotent"
+            ]
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "is",
+              "not"
+            ]
+          },
+          "value": {
+            "type": "boolean"
+          },
+          "strength": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "must",
+                  "should"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Scope"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A one-line human gloss."
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cites": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "predicate",
+          "relation",
+          "value",
+          "strength",
+          "scope",
+          "gloss",
+          "anchors",
+          "cites"
+        ],
+        "additionalProperties": false
+      },
+      "InvariantPremise": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "predicate": {
+            "type": "string",
+            "enum": [
+              "invariant"
+            ]
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "is"
+            ]
+          },
+          "value": {
+            "$ref": "#/$defs/Text"
+          },
+          "strength": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "must",
+                  "should"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Scope"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A one-line human gloss."
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cites": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "predicate",
+          "relation",
+          "value",
+          "strength",
+          "scope",
+          "gloss",
+          "anchors",
+          "cites"
+        ],
+        "description": "Free text, compared only by a model.",
+        "additionalProperties": false
+      },
+      "LiteralShape": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "literal"
+            ]
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "MessageCitation": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "message"
+            ]
+          },
+          "ref": {
+            "$ref": "#/$defs/Ref"
+          }
+        },
+        "required": [
+          "kind",
+          "ref"
+        ],
+        "description": "A message in the conversation, by the identifier the driver gave it.",
+        "additionalProperties": false
+      },
+      "ObjectShape": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "object"
+            ]
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/ShapeField"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "fields"
+        ],
+        "additionalProperties": false
+      },
+      "OpaqueShape": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "opaque"
+            ]
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "OrderingPremise": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "predicate": {
+            "type": "string",
+            "enum": [
+              "ordering"
+            ]
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "before",
+              "after"
+            ]
+          },
+          "value": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "strength": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "must",
+                  "should"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Scope"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A one-line human gloss."
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cites": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "predicate",
+          "relation",
+          "value",
+          "strength",
+          "scope",
+          "gloss",
+          "anchors",
+          "cites"
+        ],
+        "description": "The subject is the first event of the pair and the value the second.",
+        "additionalProperties": false
+      },
+      "PremiseProposition": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/FreshnessPremise"
+          },
+          {
+            "$ref": "#/$defs/ConsistencyPremise"
+          },
+          {
+            "$ref": "#/$defs/CardinalityPremise"
+          },
+          {
+            "$ref": "#/$defs/BoundPremise"
+          },
+          {
+            "$ref": "#/$defs/PresencePremise"
+          },
+          {
+            "$ref": "#/$defs/PurityPremise"
+          },
+          {
+            "$ref": "#/$defs/IdempotentPremise"
+          },
+          {
+            "$ref": "#/$defs/AuthorityPremise"
+          },
+          {
+            "$ref": "#/$defs/ShapePremise"
+          },
+          {
+            "$ref": "#/$defs/OrderingPremise"
+          },
+          {
+            "$ref": "#/$defs/InvariantPremise"
+          }
+        ],
+        "description": "What a model relies on about code it does not own."
+      },
+      "PresencePremise": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "predicate": {
+            "type": "string",
+            "enum": [
+              "presence"
+            ]
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "is",
+              "not"
+            ]
+          },
+          "value": {
+            "type": "boolean"
+          },
+          "strength": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "must",
+                  "should"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Scope"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A one-line human gloss."
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cites": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "predicate",
+          "relation",
+          "value",
+          "strength",
+          "scope",
+          "gloss",
+          "anchors",
+          "cites"
+        ],
+        "additionalProperties": false
+      },
+      "PrimitiveShape": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "unknown",
+              "never",
+              "string",
+              "number",
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "description": "`unknown` admits every value and `never` none.",
+        "additionalProperties": false
+      },
+      "PurityPremise": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "predicate": {
+            "type": "string",
+            "enum": [
+              "purity"
+            ]
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "is",
+              "not"
+            ]
+          },
+          "value": {
+            "type": "boolean"
+          },
+          "strength": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "must",
+                  "should"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Scope"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A one-line human gloss."
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cites": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "predicate",
+          "relation",
+          "value",
+          "strength",
+          "scope",
+          "gloss",
+          "anchors",
+          "cites"
+        ],
+        "additionalProperties": false
+      },
+      "RecordCitation": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "record"
+            ]
+          },
+          "ref": {
+            "$ref": "#/$defs/Ref"
+          }
+        },
+        "required": [
+          "kind",
+          "ref"
+        ],
+        "description": "An earlier MFP message, by the identifier its receiver gave it.",
+        "additionalProperties": false
+      },
+      "Ref": {
+        "type": "string",
+        "description": "An identifier the driver gave the model: a message, a tool call, an earlier\nMFP message or a decision. A model never invents one."
+      },
+      "Scope": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9._-]*:[a-z0-9][a-z0-9._-]*(?:\\|[a-z0-9][a-z0-9._-]*)*(?:;[a-z0-9][a-z0-9._-]*:[a-z0-9][a-z0-9._-]*(?:\\|[a-z0-9][a-z0-9._-]*)*)*$",
+        "description": "Where a proposition holds, as `;`-separated `dimension:atom|atom` parts, e.g.\n`env:prod|staging;tenant:t1`. A dimension appears at most once. Absent means\neverywhere."
+      },
+      "Shape": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/PrimitiveShape"
+          },
+          {
+            "$ref": "#/$defs/LiteralShape"
+          },
+          {
+            "$ref": "#/$defs/ArrayShape"
+          },
+          {
+            "$ref": "#/$defs/ObjectShape"
+          },
+          {
+            "$ref": "#/$defs/UnionShape"
+          },
+          {
+            "$ref": "#/$defs/OpaqueShape"
+          }
+        ],
+        "description": "A structural type, the value of a `shape` proposition. Objects list their\nfields; `opaque` names a type the writer could not see into."
+      },
+      "ShapeField": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "shape": {
+            "$ref": "#/$defs/Shape"
+          },
+          "optional": {
+            "type": "boolean",
+            "description": "Whether the field may be absent."
+          }
+        },
+        "required": [
+          "name",
+          "shape",
+          "optional"
+        ],
+        "additionalProperties": false
+      },
+      "ShapePremise": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/$defs/SubjectKey"
+          },
+          "predicate": {
+            "type": "string",
+            "enum": [
+              "shape"
+            ]
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "is",
+              "at-most",
+              "at-least"
+            ]
+          },
+          "value": {
+            "$ref": "#/$defs/Shape"
+          },
+          "strength": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "must",
+                  "should"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Scope"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A one-line human gloss."
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cites": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "predicate",
+          "relation",
+          "value",
+          "strength",
+          "scope",
+          "gloss",
+          "anchors",
+          "cites"
+        ],
+        "additionalProperties": false
+      },
+      "SubjectKey": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$",
+        "description": "A named concept in the codebase, as dot-separated segments of lowercase\nletters, digits and inner hyphens, e.g. `authz.permission-evaluation`. Keys\nare hierarchical: `authz` is an ancestor of `authz.permission-evaluation`."
+      },
+      "Text": {
+        "type": "string",
+        "pattern": "\\S",
+        "description": "Text a reader is meant to read: at least one non-space character."
+      },
+      "ToolResultCitation": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "tool-result"
+            ]
+          },
+          "ref": {
+            "$ref": "#/$defs/Ref"
+          }
+        },
+        "required": [
+          "kind",
+          "ref"
+        ],
+        "description": "The result of a tool call, by the call's identifier.",
+        "additionalProperties": false
+      },
+      "UnionShape": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "union"
+            ]
+          },
+          "of": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Shape"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "of"
+        ],
+        "additionalProperties": false
+      },
+      "Unit": {
+        "type": "string",
+        "pattern": "^\\S+$",
+        "description": "A unit of measure, e.g. `ms`, `bytes`, `requests/s`."
+      },
+      "Writer": {
+        "type": "string",
+        "pattern": "^[^\\s,]+$",
+        "description": "A writer of a subject: a name with no spaces or commas."
+      }
+    }
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "ref": {
+        "type": "string",
+        "description": "The identifier the receiver gave this report. Cite it later as {kind: \"record\", ref}."
+      }
+    },
+    "required": [
+      "ref"
+    ],
+    "additionalProperties": false
+  },
+  "annotations": {
+    "title": "Report a premise",
+    "readOnlyHint": false,
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false
+  }
+}

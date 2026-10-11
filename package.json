@@ -19,6 +19,10 @@
     "./profile": {
       "types": "./lib/profile.d.ts",
       "default": "./lib/profile.js"
+    },
+    "./emit": {
+      "types": "./lib/emit.d.ts",
+      "default": "./lib/emit.js"
     }
   },
   "bin": {

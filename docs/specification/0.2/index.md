@@ -34,6 +34,7 @@ A receiver that keeps messages as records adds all of those itself, in its own l
 | [Propositions](propositions.md) | Typed statements about a subject: premises and effects |
 | [Lattices](lattices.md) | How each predicate orders its values, and how two propositions compare |
 | [Extensibility](extensibility.md) | Versioning, unknown members, vendor extensions, profiles, the media type |
+| [Bindings](bindings.md) | How a model emits MFP: as structured output, and as MCP tool calls |
 | [Security considerations](security.md) | Why a message is never evidence, and what a consumer must not trust |
 | [Migrating from 0.1](migrating-from-0.1.md) | What changed, member by member |
 
@@ -45,6 +46,8 @@ The normative schema source is [`schema/0.2/main.tsp`](../../../schema/0.2/main.
 |---|---|---|
 | [`mfp.schema.json`](../../../schema/0.2/mfp.schema.json) | `https://bimsonz.github.io/mfp/schema/0.2/mfp.schema.json` | **Consumers.** The wire form. Open: it accepts members it does not define, as consumers must ignore them. |
 | [`producer.schema.json`](../../../schema/0.2/producer.schema.json) | `https://bimsonz.github.io/mfp/schema/0.2/producer.schema.json` | **Producers.** The wire form with every object closed and the core profile applied. |
+
+The model-facing schemas, one structured-output schema and one MCP tool per kind, are generated from the producer schema into [`schema/0.2/emit/`](../../../schema/0.2/emit) and [`schema/0.2/mcp/`](../../../schema/0.2/mcp). See [Bindings](bindings.md).
 
 A message is valid when it validates against `$defs/Message` of the wire schema. Where this text and the schema disagree, the schema wins.
 
@@ -62,6 +65,7 @@ MFP defines four conformance classes. An implementation names the ones it claims
 
 - **Producer:** emits messages.
   - Every message it emits MUST be valid against the producer schema of its profile (the core profile's when it names none).
+  - A model emitting through a [binding](bindings.md) is a producer once the driver has applied `toWire`.
   - It MUST also meet the rules in these documents that a schema cannot check.
 - **Consumer:** reads messages.
   - It MUST accept every message that is valid against the wire schema.

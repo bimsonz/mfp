@@ -236,109 +236,119 @@ model OpaqueShape {
   name: string;
 }
 
-/** Fields every proposition carries. */
+/** Fields every proposition carries after its claim. */
 alias PropositionFields = {
-  subject: SubjectKey;
   scope?: Scope;
-  anchors?: Anchor[];
 
   /** A one-line human gloss. */
   gloss?: string;
 
+  anchors?: Anchor[];
   cites?: Citation[];
 };
 
-/** Fields every premise carries. */
+/** Fields every premise carries after its claim. */
 alias PremiseFields = {
-  ...PropositionFields;
-
   /**
    * The holder's kind of reliance, not a confidence. `must`: the holder breaks
    * if the proposition is false. `should`: it degrades. Comparison never reads it.
    */
   strength?: "must" | "should" = "must";
+
+  ...PropositionFields;
 };
 
 model FreshnessPremise {
-  ...PremiseFields;
+  subject: SubjectKey;
   predicate: "freshness";
   relation: OrderRelation;
   value: FreshnessValue;
+  ...PremiseFields;
 }
 
 model ConsistencyPremise {
-  ...PremiseFields;
+  subject: SubjectKey;
   predicate: "consistency";
   relation: OrderRelation;
   value: ConsistencyValue;
+  ...PremiseFields;
 }
 
 model CardinalityPremise {
-  ...PremiseFields;
+  subject: SubjectKey;
   predicate: "cardinality";
   relation: OrderRelation;
   value: CardinalityValue;
+  ...PremiseFields;
 }
 
 model BoundPremise {
-  ...PremiseFields;
+  subject: SubjectKey;
   predicate: "bound";
   relation: OrderRelation;
   value: float64;
   unit: Unit;
+  ...PremiseFields;
 }
 
 model PresencePremise {
-  ...PremiseFields;
+  subject: SubjectKey;
   predicate: "presence";
   relation: PointRelation;
   value: boolean;
+  ...PremiseFields;
 }
 
 model PurityPremise {
-  ...PremiseFields;
+  subject: SubjectKey;
   predicate: "purity";
   relation: PointRelation;
   value: boolean;
+  ...PremiseFields;
 }
 
 model IdempotentPremise {
-  ...PremiseFields;
+  subject: SubjectKey;
   predicate: "idempotent";
   relation: PointRelation;
   value: boolean;
+  ...PremiseFields;
 }
 
 model AuthorityPremise {
-  ...PremiseFields;
+  subject: SubjectKey;
   predicate: "authority";
   relation: RangeRelation;
 
   @uniqueItems
   value: Writer[];
+  ...PremiseFields;
 }
 
 model ShapePremise {
-  ...PremiseFields;
+  subject: SubjectKey;
   predicate: "shape";
   relation: RangeRelation;
   value: Shape;
+  ...PremiseFields;
 }
 
 /** The subject is the first event of the pair and the value the second. */
 model OrderingPremise {
-  ...PremiseFields;
+  subject: SubjectKey;
   predicate: "ordering";
   relation: "before" | "after";
   value: SubjectKey;
+  ...PremiseFields;
 }
 
 /** Free text, compared only by a model. */
 model InvariantPremise {
-  ...PremiseFields;
+  subject: SubjectKey;
   predicate: "invariant";
   relation: "is";
   value: Text;
+  ...PremiseFields;
 }
 
 /** What a model relies on about code it does not own. */
@@ -357,93 +367,105 @@ union PremiseProposition {
 }
 
 model FreshnessEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "freshness";
   relation: OrderRelation;
   value: FreshnessValue;
+  ...PropositionFields;
 }
 
 /** Only an effect takes the invalidation form: a premise states the freshness it relies on. */
 model InvalidationEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "freshness";
   relation: "is" | "at-most";
   value: InvalidationValue;
+  ...PropositionFields;
 }
 
 model ConsistencyEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "consistency";
   relation: OrderRelation;
   value: ConsistencyValue;
+  ...PropositionFields;
 }
 
 model CardinalityEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "cardinality";
   relation: OrderRelation;
   value: CardinalityValue;
+  ...PropositionFields;
 }
 
 model BoundEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "bound";
   relation: OrderRelation;
   value: float64;
   unit: Unit;
+  ...PropositionFields;
 }
 
 model PresenceEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "presence";
   relation: PointRelation;
   value: boolean;
+  ...PropositionFields;
 }
 
 model PurityEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "purity";
   relation: PointRelation;
   value: boolean;
+  ...PropositionFields;
 }
 
 model IdempotentEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "idempotent";
   relation: PointRelation;
   value: boolean;
+  ...PropositionFields;
 }
 
 model AuthorityEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "authority";
   relation: RangeRelation;
 
   @uniqueItems
   value: Writer[];
+  ...PropositionFields;
 }
 
 model ShapeEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "shape";
   relation: RangeRelation;
   value: Shape;
+  ...PropositionFields;
 }
 
 /** The subject is the first event of the pair and the value the second. */
 model OrderingEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "ordering";
   relation: "before" | "after";
   value: SubjectKey;
+  ...PropositionFields;
 }
 
 /** Free text, compared only by a model. */
 model InvariantEffect {
-  ...PropositionFields;
+  subject: SubjectKey;
   predicate: "invariant";
   relation: "is";
   value: Text;
+  ...PropositionFields;
 }
 
 /** What a model expects a change to alter. */
@@ -483,10 +505,13 @@ model MessageFields<Kind extends string> {
   /** The profile the message conforms to, by URI. Absent means the core profile. */
   @format("uri")
   profile?: string;
+}
 
+/** Members every message carries last, once its report is made. */
+alias Confidence = {
   /** The model's own confidence in this report. An opinion about an opinion: it never carries weight. */
   confidence?: "low" | "medium" | "high";
-}
+};
 
 /** What a model will do, and what it relies on, before it writes code. */
 model Intent {
@@ -505,6 +530,7 @@ model Intent {
   declaredEffects?: EffectProposition[];
 
   cites?: Citation[];
+  ...Confidence;
 }
 
 /** One more thing the model relies on, after its intent. */
@@ -512,6 +538,7 @@ model Premise {
   ...MessageFields<"premise">;
   premise: PremiseProposition;
   cites?: Citation[];
+  ...Confidence;
 }
 
 model Alternative {
@@ -528,6 +555,7 @@ model Decision {
   alternatives: Alternative[];
   reversible: boolean;
   cites: Citations;
+  ...Confidence;
 }
 
 /** Something the model noticed, and what it rests on. */
@@ -540,6 +568,7 @@ model Observation {
   importance: "low" | "medium" | "high";
   summary: Text;
   cites: Citations;
+  ...Confidence;
 }
 
 /** How the model's work relates to an earlier decision it met as precedent. */
@@ -555,6 +584,7 @@ model Stance {
   argument: Text;
 
   cites?: Citation[];
+  ...Confidence;
 }
 
 model Reason {
@@ -579,6 +609,7 @@ model Verdict {
   residualRisk?: string;
 
   cites?: Citation[];
+  ...Confidence;
 }
 
 /** Any MFP 0.2 message. */

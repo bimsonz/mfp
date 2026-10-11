@@ -101,7 +101,9 @@ writeFileSync(
 
 const prior = values.prior === undefined ? (run.prior ?? 0) : Number(values.prior);
 let attempts = run.attempts ?? 0;
-const transient = (error: string) => /capacity|rate limit|too many|429|50[234]|timeout|timed out|network|fetch failed/i.test(error);
+/** A transport failure never reached a result, such as the local Worker restarting mid-request, so it is always retried. */
+const transient = (error: string) =>
+  error.startsWith("transport:") || /capacity|rate limit|too many|429|50[234]|timeout|timed out|network|fetch failed/i.test(error);
 
 const infer = async (job: Job) => {
   const input = buildRequest(job.task, job.mode);
@@ -110,7 +112,13 @@ const infer = async (job: Job) => {
     attempts++;
     let response: any;
     try {
-      response = await (await fetch(ENDPOINT, { method: "POST", body: JSON.stringify({ model: job.model, input }) })).json();
+      const reply = await fetch(ENDPOINT, { method: "POST", body: JSON.stringify({ model: job.model, input }) });
+      const text = await reply.text();
+      try {
+        response = JSON.parse(text);
+      } catch {
+        response = { ok: false, ms: 0, error: `transport: ${reply.status} ${text.split("\n")[0]!.slice(0, 200)}` };
+      }
     } catch (e) {
       response = { ok: false, ms: 0, error: `transport: ${e instanceof Error ? e.message : String(e)}` };
     }

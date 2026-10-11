@@ -138,7 +138,8 @@ table(
     ["Wrangler", `\`${run.wrangler}\``],
     ["Worker compatibility_date", String(run.compatibility_date)],
     ["Responses scored", String(rows.length)],
-    ["Inference calls in this run, retries included", String(rows.reduce((a, r) => a + r.attempts, 0))],
+    // Rows miss attempts whose rows were dropped; run.json misses those in flight when a run was stopped.
+    ["Inference calls in this run, retries included", String(Math.max(run.attempts ?? 0, rows.reduce((a, r) => a + r.attempts, 0)))],
     ["Inference calls before it (smoke and dry run, not scored)", String(run.prior)],
   ],
 );

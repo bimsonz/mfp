@@ -9,7 +9,7 @@
     "properties": {
       "decision": {
         "type": "string",
-        "description": "The decision, by the identifier the driver gave it."
+        "description": "The decision, by the identifier the driver gave it. An identifier the driver gave the model: a message, a tool call, an earlier\nMFP message or a decision. A model never invents one."
       },
       "stance": {
         "type": "string",
@@ -21,7 +21,7 @@
       },
       "argument": {
         "type": "string",
-        "description": "Why the decision applies, does not apply, or should be overruled."
+        "description": "Why the decision applies, does not apply, or should be overruled. Text a reader is meant to read: at least one non-space character."
       },
       "cites": {
         "anyOf": [

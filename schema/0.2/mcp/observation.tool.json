@@ -9,7 +9,7 @@
     "properties": {
       "category": {
         "type": "string",
-        "description": "What kind of thing was noticed. Open in the core; a profile may close it."
+        "description": "What kind of thing was noticed. Open in the core; a profile may close it. A lowercase token: letters, digits and inner hyphens, e.g. `request-changes`."
       },
       "importance": {
         "type": "string",

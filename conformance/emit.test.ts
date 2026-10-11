@@ -138,6 +138,13 @@ describe("T10: MCP tools", () => {
     const refs = [...nodes(tool.inputSchema)].filter(([, node]) => "$ref" in node);
     expect([refs.length, tool.inputSchema.$defs]).toEqual([0, undefined]);
   });
+  it.each(generated.filter(({ kind }) => !RECURSIVE.includes(kind)))("$kind's inlined input keeps every description it had", ({ schema, tool }) => {
+    const shown = [...nodes(tool.inputSchema)].map(([, node]) => node.description).filter((d) => typeof d === "string");
+    const lost = Object.entries(schema.$defs as Record<string, any>)
+      .filter(([, def]) => typeof def.description === "string" && !shown.some((d) => d.includes(def.description)))
+      .map(([name]) => name);
+    expect(lost).toEqual([]);
+  });
   it.each(generated.filter(({ kind }) => RECURSIVE.includes(kind)))("$kind's input keeps its defs, since a shape nests", ({ tool }) => {
     expect(Object.keys(tool.inputSchema.$defs)).toContain("Shape");
   });

@@ -136,7 +136,7 @@
     },
     "CommitId": {
       "type": "string",
-      "description": "A git object id: 40 lowercase hex digits (SHA-1) or 64 (SHA-256)."
+      "description": "A git object id: 40 lowercase hex digits (SHA-1) or 64 (SHA-256). It must match the regular expression `^(?:[0-9a-f]{40}|[0-9a-f]{64})$`."
     },
     "MessageCitation": {
       "type": "object",

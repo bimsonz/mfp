@@ -24,7 +24,7 @@ The first emit eval ([`2026-10-11`](../eval/results/2026-10-11/RESULTS.md); five
 ## Specification
 
 In [Bindings](../docs/specification/0.2/bindings.md):
-- The emit form's keywords no longer include `pattern`. Each definition whose wire form has a pattern states its grammar in its `description`. The wire schema still enforces every pattern when the driver validates what the model emitted.
+- The emit form's keywords no longer include `pattern`. Each definition whose wire form has a pattern states its grammar in its `description`: in words, and, for a whole-string grammar (`^…$`), as the regular expression. The wire schema still enforces every pattern when the driver validates what the model emitted.
 - A driver that asks for structured output SHOULD also put the emit schema in the prompt.
 - An MCP tool's `inputSchema` inlines its `$ref`s, unless the kind has a recursive definition. In the core, intent and premise do: a shape can contain a shape. They keep their `$defs`. An inlined member keeps both its own description and its type's.
 

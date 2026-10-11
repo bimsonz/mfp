@@ -25,7 +25,7 @@ Strict structured-output modes accept only a subset of JSON Schema, and treat pa
 - is self-contained: its `$defs` are local, and every `$ref` is `#/$defs/<name>`;
 - uses only these keywords: `type`, `properties`, `required`, `additionalProperties`, `items`, `enum`, `anyOf`, `$ref`, `$defs`, `description`, `minItems`.
 
-The emit form carries no `pattern`. A constrained decoder matches a pattern against the whole string, where JSON Schema searches the string for it. So `\S` ("some non-space character") admits exactly one character, and a grammar with no end lets the decoder extend a string until the token limit. Each definition whose wire form has a pattern states its grammar in its `description` instead.
+The emit form carries no `pattern`. A constrained decoder matches a pattern against the whole string, where JSON Schema searches the string for it. So `\S` ("some non-space character") admits exactly one character, and a grammar with no end lets the decoder extend a string until the token limit. Each definition whose wire form has a pattern states its grammar in its `description` instead: in words, and, where the pattern is a whole-string grammar (`^…$`), as the regular expression itself. A search such as `\S` is stated in words only, since a model may read it as the whole string, as a decoder does.
 
 The keywords the emit form drops (`pattern`, `minLength`, `uniqueItems`, `format`, `default`) are still enforced by the wire schema, when the driver checks what the model emitted.
 

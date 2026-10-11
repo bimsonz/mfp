@@ -115,6 +115,17 @@ describe("T19: the emit form leaves patterns to the wire", () => {
       .map(([name]) => name);
     expect(undescribed).toEqual([]);
   });
+  // A whole-string grammar is shown as written; a search such as Text's `\S` is not,
+  // since a model may read it as the whole string, as a constrained decoder does.
+  it.each(generated)("$kind shows each whole-string grammar's regular expression, and no other", ({ schema }) => {
+    const wrong = Object.entries(schema.$defs as Record<string, any>).flatMap(([name, def]) => {
+      const pattern = producer.$defs[name]?.pattern;
+      if (typeof pattern !== "string") return [];
+      const shown = String(def.description).includes(`\`${pattern}\``);
+      return shown === /^\^.*\$$/s.test(pattern) ? [] : [name];
+    });
+    expect(wrong).toEqual([]);
+  });
 });
 
 describe("T10: MCP tools", () => {

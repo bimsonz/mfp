@@ -4,6 +4,8 @@ Notable changes to MFP. The format is [Keep a Changelog](https://keepachangelog.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-11
+
 MFP 0.2: the language a model speaks back.
 
 ### Removed
@@ -15,7 +17,7 @@ MFP 0.2: the language a model speaks back.
 
 - A message is flat, and its wire version is `0.2`.
 - Propositions are a union with one shape per predicate, and premises and effects have separate positions.
-- The emit form has no `pattern`, by [proposal 0002](proposals/0002-emit-without-patterns.md), in draft. Each grammar is in its description, in words, and as its regular expression if it is anchored. An MCP tool's input inlines its refs unless the kind is recursive, and keeps every description. A structured-output driver also puts the schema in the prompt.
+- The emit form has no `pattern`, by [proposal 0002](proposals/0002-emit-without-patterns.md). Each grammar is in its description, in words, and as its regular expression if it is anchored. An MCP tool's input inlines its refs unless the kind is recursive, and keeps every description. A structured-output driver also puts the schema in the prompt.
 
 ### Added
 
@@ -46,7 +48,8 @@ MFP 0.2: the language a model speaks back.
 
 - The MFP 0.1 schema, published as a TypeSpec library.
 
-[Unreleased]: https://github.com/bimsonz/mfp/compare/v0.1.0-pre.3...HEAD
+[Unreleased]: https://github.com/bimsonz/mfp/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/bimsonz/mfp/compare/v0.1.0-pre.3...v0.2.0
 [0.1.0-pre.3]: https://github.com/bimsonz/mfp/compare/v0.1.0-pre.2...v0.1.0-pre.3
 [0.1.0-pre.2]: https://github.com/bimsonz/mfp/compare/v0.1.0-pre...v0.1.0-pre.2
 [0.1.0-pre]: https://github.com/bimsonz/mfp/releases/tag/v0.1.0-pre

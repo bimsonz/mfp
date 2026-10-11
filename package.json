@@ -1,6 +1,6 @@
 {
   "name": "@bimsonz/mfp",
-  "version": "0.2.0-pre.0",
+  "version": "0.2.0",
   "description": "MFP, the Model Feedback Protocol: the language a model speaks back to whatever drives it",
   "license": "MIT",
   "type": "module",

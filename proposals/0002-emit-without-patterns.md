@@ -1,7 +1,7 @@
 # 0002: Emit without patterns
 
 - **Type:** Standards Track
-- **Status:** Draft
+- **Status:** Final
 - **Created:** 2026-10-11
 - **Author:** Zach Bimson (@bimsonz)
 - **Implementation:** e592831, 5c988b0, 44765fc

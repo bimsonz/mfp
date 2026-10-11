@@ -1,6 +1,6 @@
 # MFP 0.2
 
-**Status:** draft. MFP, the Model Feedback Protocol, is the language a model speaks back to whatever drives it. This version is `0.2`.
+**Status:** released as `0.2.0` on 2026-10-11. MFP, the Model Feedback Protocol, is the language a model speaks back to whatever drives it. This version is `0.2`.
 
 MCP carries what a model asks of tools. MFP is what a model reports back, often carried as MCP tool calls.
 

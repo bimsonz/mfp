@@ -40,9 +40,12 @@ describe("T16: proposals", () => {
     const name = title.slice(6);
     expect(index).toContain(`| [${file.slice(0, 4)}](${file}) | ${name} | ${fields.Type} | ${fields.Status} |`);
   });
-  it.each(proposals.filter(({ fields }) => fields.Status === "Final"))("$file, Final, names a real commit", ({ fields }) => {
-    expect(fields.Implementation).toMatch(/^[0-9a-f]{7,40}$/);
-    expect(() => git("cat-file", "-e", `${fields.Implementation}^{commit}`)).not.toThrow();
+  it.each(proposals.filter(({ fields }) => fields.Status === "Final"))("$file, Final, names real commits", ({ fields }) => {
+    const commits = (fields.Implementation ?? "").split(/,\s*/);
+    for (const sha of commits) {
+      expect(sha).toMatch(/^[0-9a-f]{7,40}$/);
+      expect(() => git("cat-file", "-e", `${sha}^{commit}`)).not.toThrow();
+    }
   });
   it.each(proposals.filter(({ fields }) => fields.Status === "Final" && fields.Type === "Standards Track"))(
     "$file, Final, names conformance cases that exist",

@@ -49,4 +49,4 @@ The maintainers are the repository's owners. One of them accepts or rejects a pr
 | Number | Title | Type | Status |
 |---|---|---|---|
 | [0001](0001-remove-trust-fields.md) | Remove the trust fields | Standards Track | Final |
-| [0002](0002-emit-without-patterns.md) | Emit without patterns | Standards Track | Draft |
+| [0002](0002-emit-without-patterns.md) | Emit without patterns | Standards Track | Final |

@@ -52,7 +52,8 @@ A message carries what the model says, and nothing a receiver must vouch for: no
 | `examples/profiles/` | A neutral example profile, with its messages |
 | `conformance/` | Invalid cases, lattice vectors, and the tests that run them |
 | `lib/`, `bin/` | The profile check and the emit transform, as libraries and as `mfp-profile` |
-| `proposals/` | Proposed changes |
+| `eval/` | The emit eval: tasks, harness and results |
+| [`proposals/`](proposals/README.md) | How MFP changes, and each proposal |
 
 ## Use it
 
@@ -82,5 +83,9 @@ pnpm conformance    # examples, invalid cases, lattice vectors, profiles, bindin
 pnpm check:drift    # fail if a generated schema is stale
 pnpm typecheck && pnpm lint
 ```
+
+## Take part
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before you open a pull request; a change to what an implementation does starts as a [proposal](proposals/README.md). Changes are listed in [CHANGELOG.md](CHANGELOG.md). Everyone taking part follows the [code of conduct](CODE_OF_CONDUCT.md). Report a vulnerability as [SECURITY.md](SECURITY.md) says.
 
 MIT licensed. See [LICENSE](LICENSE).

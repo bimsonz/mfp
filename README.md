@@ -1,60 +1,80 @@
 # MFP: Model Feedback Protocol
 
-An open format for the claims a model makes about its work: intents, premises, decisions, observations, stances, verdicts and derivations. Every claim is attributed and cites its sources.
+The language a model speaks back to whatever drives it: a small, fixed way for a model to report its intent, premises, decisions, observations, stances and uncertainty.
 
-> MCP is how a model asks. MFP is how a model accounts for itself.
+> MCP carries what a model asks of tools. MFP is what a model reports back, often carried as MCP tool calls.
 
-Status: `mfp/0.1`, in draft.
+Status: `0.2`, in draft.
 
-## Claims, not facts
+## A message
 
-An MFP record is a **claim**: something an author asserts, which a reader may weigh. Raw facts (pushes, test runs, tool calls) are not MFP records; they already live in git and in a platform's operation log, and records cite them instead. Every record states its **author**, which is an agent, a platform or a human, so a platform's interpretation never reads as something an agent said.
+```json
+{
+  "mfp": "0.2",
+  "kind": "premise",
+  "confidence": "medium",
+  "premise": {
+    "subject": "authz.permission-evaluation",
+    "predicate": "freshness",
+    "relation": "at-most",
+    "value": "per-request",
+    "gloss": "requirePermission re-reads roles on every request"
+  }
+}
+```
 
-| Kind | Claim |
+| Kind | Reports |
 |---|---|
-| `intent` | What a change will do, and the premises it relies on |
-| `premise` | One more thing a change relies on |
-| `decision` | A choice, its rationale and the alternatives rejected. Must cite |
-| `observation` | Something noticed, with evidence |
-| `stance` | How a change relates to an earlier decision: followed, distinguished, or overrule requested |
-| `verdict` | An outcome for a change, with the evidence behind it. Must cite |
-| `derivation` | The effects a platform derived from a diff, each with its method and evidence class. Platform-authored |
+| `intent` | What the model will do, and what it relies on, before it writes code |
+| `premise` | One more thing it relies on |
+| `decision` | A choice, why, and the alternatives rejected |
+| `observation` | Something it noticed, and what that rests on |
+| `stance` | How its work relates to an earlier decision: followed, distinguished, or overrule requested |
+| `verdict` | The outcome it thinks the work should have: an opinion, never a ruling |
 
-`effect` is a payload shape, not a kind: an intent *declares* effects (advisory), a derivation *derives* them.
+Premises and effects are typed propositions on ordered predicates (freshness, consistency, cardinality, bound, authority, shape, ordering and more), so a consumer can tell whether a change's effect contradicts what another relies on.
+
+## A claim, never evidence
+
+A message carries what the model says, and nothing a receiver must vouch for: no identifier, author, timestamp, evidence class or signature. A receiver that keeps messages as records adds those itself, in its own layer. No content of a message can raise its standing. See [Security considerations](docs/specification/0.2/security.md).
 
 ## Layout
 
 | Path | Contents |
 |---|---|
-| `schema/0.1/main.tsp` | The schema source, also published as a TypeSpec library |
-| `schema/0.1/schema.json` | The JSON Schema (2020-12), generated from `main.tsp` and committed |
-| `docs/specification/0.1/` | The specification |
-| `examples/0.1/` | Example records, each named `*.valid.json` or `*.invalid.json` |
-| `conformance/` | Checks every example against the schema |
+| [`docs/specification/0.2/`](docs/specification/0.2/index.md) | The specification |
+| `schema/0.2/main.tsp` | The schema source, also published as a TypeSpec library |
+| `schema/0.2/mfp.schema.json` | The wire schema (JSON Schema 2020-12), for consumers |
+| `schema/0.2/producer.schema.json` | The producer schema: every object closed, the core profile applied |
+| `schema/0.2/core.profile.json` | The core profile |
+| `examples/0.2/` | Valid messages of every kind |
+| `examples/profiles/` | A neutral example profile, with its messages |
+| `conformance/` | Invalid cases, lattice vectors, and the tests that run them |
+| `lib/`, `bin/` | The profile check, as a library and as `mfp-profile` |
 | `proposals/` | Proposed changes |
 
 ## Use it
 
-From TypeSpec, add the repository as a dependency pinned by tag and import it:
-
-```jsonc
-// package.json
-"@bimsonz/mfp": "github:bimsonz/mfp#v0.1.0-pre.3"
-```
+From TypeSpec, add the repository as a dependency, pinned by tag, and import it:
 
 ```tsp
 import "@bimsonz/mfp";
 ```
 
-From anything else, validate against `schema/0.1/schema.json`; the record type is `$defs/MfpRecord`.
+From anything else, validate against `schema/0.2/mfp.schema.json`, as `$defs/Message`. Check a profile with:
+
+```sh
+pnpm exec mfp-profile check profile.json [message.json ...]
+```
 
 ## Develop
 
 ```sh
 pnpm install
-pnpm build:schema   # regenerate schema.json from main.tsp
-pnpm conformance    # validate every example
-pnpm check:drift    # fail if schema.json is stale
+pnpm build          # regenerate the schemas from main.tsp
+pnpm conformance    # examples, invalid cases, lattice vectors, profiles
+pnpm check:drift    # fail if a generated schema is stale
+pnpm typecheck && pnpm lint
 ```
 
 MIT licensed. See [LICENSE](LICENSE).

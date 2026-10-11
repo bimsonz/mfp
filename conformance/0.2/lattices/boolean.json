@@ -1,0 +1,185 @@
+{
+  "description": "Region vectors: how an effect's claim sits against a premise's, on one predicate.",
+  "cases": [
+    {
+      "predicate": "presence",
+      "premise": {
+        "relation": "is",
+        "value": true
+      },
+      "effect": {
+        "relation": "is",
+        "value": true
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "presence",
+      "premise": {
+        "relation": "is",
+        "value": true
+      },
+      "effect": {
+        "relation": "is",
+        "value": false
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "presence",
+      "premise": {
+        "relation": "is",
+        "value": true
+      },
+      "effect": {
+        "relation": "not",
+        "value": true
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "presence",
+      "premise": {
+        "relation": "not",
+        "value": false
+      },
+      "effect": {
+        "relation": "is",
+        "value": true
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "presence",
+      "premise": {
+        "relation": "not",
+        "value": true
+      },
+      "effect": {
+        "relation": "not",
+        "value": true
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "purity",
+      "premise": {
+        "relation": "is",
+        "value": true
+      },
+      "effect": {
+        "relation": "is",
+        "value": true
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "purity",
+      "premise": {
+        "relation": "is",
+        "value": true
+      },
+      "effect": {
+        "relation": "is",
+        "value": false
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "purity",
+      "premise": {
+        "relation": "is",
+        "value": true
+      },
+      "effect": {
+        "relation": "not",
+        "value": true
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "purity",
+      "premise": {
+        "relation": "not",
+        "value": false
+      },
+      "effect": {
+        "relation": "is",
+        "value": true
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "purity",
+      "premise": {
+        "relation": "not",
+        "value": true
+      },
+      "effect": {
+        "relation": "not",
+        "value": true
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "idempotent",
+      "premise": {
+        "relation": "is",
+        "value": true
+      },
+      "effect": {
+        "relation": "is",
+        "value": true
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "idempotent",
+      "premise": {
+        "relation": "is",
+        "value": true
+      },
+      "effect": {
+        "relation": "is",
+        "value": false
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "idempotent",
+      "premise": {
+        "relation": "is",
+        "value": true
+      },
+      "effect": {
+        "relation": "not",
+        "value": true
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "idempotent",
+      "premise": {
+        "relation": "not",
+        "value": false
+      },
+      "effect": {
+        "relation": "is",
+        "value": true
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "idempotent",
+      "premise": {
+        "relation": "not",
+        "value": true
+      },
+      "effect": {
+        "relation": "not",
+        "value": true
+      },
+      "region": "within"
+    }
+  ]
+}

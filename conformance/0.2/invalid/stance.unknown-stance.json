@@ -1,0 +1,25 @@
+{
+  "description": "A stance is followed, distinguished or overrule-requested.",
+  "against": "wire",
+  "message": {
+    "mfp": "0.2",
+    "kind": "stance",
+    "decision": "dec_01JZ8R0D2F4H6K8M0P2R4T6V8X",
+    "stance": "ignored",
+    "argument": "That decision covers interactive sessions; this change touches only service tokens, which are never cached",
+    "cites": [
+      {
+        "kind": "anchor",
+        "path": "src/authz/tokens.ts",
+        "symbol": "verifyServiceToken"
+      }
+    ]
+  },
+  "fix": [
+    {
+      "op": "replace",
+      "path": "/stance",
+      "value": "distinguished"
+    }
+  ]
+}

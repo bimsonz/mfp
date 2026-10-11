@@ -1,0 +1,28 @@
+{
+  "description": "An observation cites what it rests on.",
+  "against": "wire",
+  "message": {
+    "mfp": "0.2",
+    "kind": "observation",
+    "confidence": "high",
+    "category": "flaky-test",
+    "importance": "medium",
+    "summary": "revoke.test.ts fails about one run in ten: it races the session cache warm-up"
+  },
+  "fix": [
+    {
+      "op": "add",
+      "path": "/cites",
+      "value": [
+        {
+          "kind": "tool-result",
+          "ref": "call_17"
+        },
+        {
+          "kind": "tool-result",
+          "ref": "call_21"
+        }
+      ]
+    }
+  ]
+}

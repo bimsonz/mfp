@@ -1,0 +1,42 @@
+{
+  "description": "An intent states its premises, even when there are none.",
+  "against": "wire",
+  "message": {
+    "mfp": "0.2",
+    "kind": "intent",
+    "confidence": "medium",
+    "goal": "Revoke a collaborator's access as soon as an owner removes them",
+    "footprint": [
+      {
+        "path": "src/collaborators/revoke.ts",
+        "symbol": "revokeCollaborator",
+        "op": "edit"
+      },
+      {
+        "path": "src/collaborators/revoke.test.ts",
+        "op": "create"
+      }
+    ],
+    "declaredEffects": [
+      {
+        "subject": "collaborators.revocation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-request"
+      }
+    ],
+    "cites": [
+      {
+        "kind": "message",
+        "ref": "msg_9"
+      }
+    ]
+  },
+  "fix": [
+    {
+      "op": "add",
+      "path": "/premises",
+      "value": []
+    }
+  ]
+}

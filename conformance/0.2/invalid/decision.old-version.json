@@ -1,0 +1,37 @@
+{
+  "description": "A 0.2 consumer refuses a 0.x version it does not know.",
+  "against": "wire",
+  "message": {
+    "mfp": "0.1",
+    "kind": "decision",
+    "question": "Where should revocation be enforced?",
+    "chosen": "Permission evaluation stays per-request",
+    "rationale": "Immediate revocation outweighs the cache's latency win",
+    "alternatives": [
+      {
+        "option": "Cache per session",
+        "reasonRejected": "A revoked collaborator keeps access until the session ends"
+      }
+    ],
+    "reversible": true,
+    "cites": [
+      {
+        "kind": "anchor",
+        "path": "src/authz/check.ts",
+        "symbol": "requirePermission",
+        "commit": "3f2a9c1e5b7d4f6a8c0e2b4d6f8a0c2e4b6d8f0a"
+      },
+      {
+        "kind": "message",
+        "ref": "msg_12"
+      }
+    ]
+  },
+  "fix": [
+    {
+      "op": "replace",
+      "path": "/mfp",
+      "value": "0.2"
+    }
+  ]
+}

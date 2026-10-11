@@ -1,0 +1,21 @@
+{
+  "description": "A subject key is lowercase, dot-separated.",
+  "against": "wire",
+  "message": {
+    "mfp": "0.2",
+    "kind": "premise",
+    "premise": {
+      "subject": "Authz.Permissions",
+      "predicate": "presence",
+      "relation": "is",
+      "value": true
+    }
+  },
+  "fix": [
+    {
+      "op": "replace",
+      "path": "/premise/subject",
+      "value": "authz.permissions"
+    }
+  ]
+}

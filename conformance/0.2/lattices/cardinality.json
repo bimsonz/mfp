@@ -1,0 +1,115 @@
+{
+  "description": "Region vectors: how an effect's claim sits against a premise's, on one predicate.",
+  "cases": [
+    {
+      "predicate": "cardinality",
+      "premise": {
+        "relation": "at-most",
+        "value": "at-most-once"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "at-least-once"
+      },
+      "region": "disjoint",
+      "note": "a retry contradicts a reliance on at-most-once"
+    },
+    {
+      "predicate": "cardinality",
+      "premise": {
+        "relation": "at-most",
+        "value": "at-most-once"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "exactly-once"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "cardinality",
+      "premise": {
+        "relation": "at-most",
+        "value": "at-most-once"
+      },
+      "effect": {
+        "relation": "at-least",
+        "value": "exactly-once"
+      },
+      "region": "overlap"
+    },
+    {
+      "predicate": "cardinality",
+      "premise": {
+        "relation": "not",
+        "value": "at-least-once"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "any"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "cardinality",
+      "premise": {
+        "relation": "is",
+        "value": "exactly-once"
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": "at-most-once"
+      },
+      "region": "overlap"
+    },
+    {
+      "predicate": "cardinality",
+      "premise": {
+        "relation": "at-least",
+        "value": "at-least-once"
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": "at-most-once"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "cardinality",
+      "premise": {
+        "relation": "not",
+        "value": "any"
+      },
+      "effect": {
+        "relation": "not",
+        "value": "any"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "cardinality",
+      "premise": {
+        "relation": "not",
+        "value": "exactly-once"
+      },
+      "effect": {
+        "relation": "at-least",
+        "value": "at-most-once"
+      },
+      "region": "within",
+      "note": "on a finite order, not is decided exactly"
+    },
+    {
+      "predicate": "cardinality",
+      "premise": {
+        "relation": "at-most",
+        "value": "any"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "at-least-once"
+      },
+      "region": "within"
+    }
+  ]
+}

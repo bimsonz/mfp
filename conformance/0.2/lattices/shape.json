@@ -1,0 +1,448 @@
+{
+  "description": "Region vectors: how an effect's claim sits against a premise's, on one predicate.",
+  "cases": [
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            },
+            {
+              "name": "extra",
+              "shape": {
+                "type": "number"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "region": "within",
+      "note": "width subtyping"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "name",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "opaque",
+                "name": "UserId"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "region": "overlap",
+      "note": "an opaque type is undecidable"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-least",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            },
+            {
+              "name": "extra",
+              "shape": {
+                "type": "number"
+              },
+              "optional": true
+            }
+          ]
+        }
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "is",
+        "value": {
+          "type": "string"
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "literal",
+          "value": "x"
+        }
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "string"
+        }
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "string"
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            },
+            {
+              "name": "n",
+              "shape": {
+                "type": "number"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            },
+            {
+              "name": "n",
+              "shape": {
+                "type": "number"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "region": "overlap"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-least",
+        "value": {
+          "type": "string"
+        }
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": {
+          "type": "string"
+        }
+      },
+      "region": "overlap"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "unknown"
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "opaque",
+          "name": "X"
+        }
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "literal",
+            "value": 1
+          }
+        }
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "opaque",
+          "name": "X"
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "opaque",
+          "name": "X"
+        }
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": true
+            }
+          ]
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": true
+            }
+          ]
+        }
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "shape",
+      "premise": {
+        "relation": "at-most",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "effect": {
+        "relation": "is",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": true
+            }
+          ]
+        }
+      },
+      "region": "disjoint",
+      "note": "an optional field does not satisfy a required one"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "mfp": "0.2",
+  "kind": "observation",
+  "profile": "https://example.org/mfp/profiles/code-review/0.2",
+  "confidence": "high",
+  "category": "security",
+  "importance": "high",
+  "summary": "The webhook handler trusts the event's amount without re-reading it from the provider",
+  "cites": [
+    {
+      "kind": "anchor",
+      "path": "src/billing/webhook.ts",
+      "symbol": "handleInvoicePaid"
+    }
+  ],
+  "org.example.code-review/line": 42
+}

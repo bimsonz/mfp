@@ -1,0 +1,24 @@
+{
+  "description": "A writer set is an array of writers.",
+  "against": "wire",
+  "message": {
+    "mfp": "0.2",
+    "kind": "premise",
+    "premise": {
+      "subject": "collaborators.store",
+      "predicate": "authority",
+      "relation": "at-most",
+      "value": "collaborators-service,admin"
+    }
+  },
+  "fix": [
+    {
+      "op": "replace",
+      "path": "/premise/value",
+      "value": [
+        "collaborators-service",
+        "admin"
+      ]
+    }
+  ]
+}

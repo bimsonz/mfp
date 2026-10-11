@@ -1,0 +1,118 @@
+{
+  "description": "Region vectors: how an effect's claim sits against a premise's, on one predicate.",
+  "cases": [
+    {
+      "predicate": "bound",
+      "premise": {
+        "relation": "at-most",
+        "value": 50,
+        "unit": "ms"
+      },
+      "effect": {
+        "relation": "is",
+        "value": 20,
+        "unit": "ms"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "bound",
+      "premise": {
+        "relation": "at-most",
+        "value": 50,
+        "unit": "ms"
+      },
+      "effect": {
+        "relation": "is",
+        "value": 80,
+        "unit": "ms"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "bound",
+      "premise": {
+        "relation": "at-most",
+        "value": 50,
+        "unit": "ms"
+      },
+      "effect": {
+        "relation": "is",
+        "value": 20,
+        "unit": "s"
+      },
+      "region": "overlap",
+      "note": "units are compared as written, never converted"
+    },
+    {
+      "predicate": "bound",
+      "premise": {
+        "relation": "at-most",
+        "value": 50,
+        "unit": "ms"
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": 80,
+        "unit": "ms"
+      },
+      "region": "overlap"
+    },
+    {
+      "predicate": "bound",
+      "premise": {
+        "relation": "at-least",
+        "value": 10,
+        "unit": "ms"
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": 5,
+        "unit": "ms"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "bound",
+      "premise": {
+        "relation": "not",
+        "value": 0,
+        "unit": "ms"
+      },
+      "effect": {
+        "relation": "is",
+        "value": 1,
+        "unit": "ms"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "bound",
+      "premise": {
+        "relation": "is",
+        "value": 3,
+        "unit": "requests/s"
+      },
+      "effect": {
+        "relation": "is",
+        "value": 3,
+        "unit": "requests/s"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "bound",
+      "premise": {
+        "relation": "at-most",
+        "value": 50,
+        "unit": "ms"
+      },
+      "effect": {
+        "relation": "not",
+        "value": 20,
+        "unit": "ms"
+      },
+      "region": "overlap"
+    }
+  ]
+}

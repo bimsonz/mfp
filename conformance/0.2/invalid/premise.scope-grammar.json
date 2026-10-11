@@ -1,0 +1,22 @@
+{
+  "description": "A scope is `dimension:atom|atom` parts joined by `;`.",
+  "against": "wire",
+  "message": {
+    "mfp": "0.2",
+    "kind": "premise",
+    "premise": {
+      "subject": "authz.permission-evaluation",
+      "predicate": "freshness",
+      "relation": "at-most",
+      "value": "per-request",
+      "scope": "env=prod"
+    }
+  },
+  "fix": [
+    {
+      "op": "replace",
+      "path": "/premise/scope",
+      "value": "env:prod"
+    }
+  ]
+}

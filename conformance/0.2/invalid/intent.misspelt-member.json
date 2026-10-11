@@ -1,0 +1,76 @@
+{
+  "description": "A misspelt member is unknown: a consumer ignores it, but a producer must not emit it.",
+  "against": "core",
+  "message": {
+    "mfp": "0.2",
+    "kind": "intent",
+    "confidence": "medium",
+    "goal": "Revoke a collaborator's access as soon as an owner removes them",
+    "footprint": [
+      {
+        "path": "src/collaborators/revoke.ts",
+        "symbol": "revokeCollaborator",
+        "op": "edit"
+      },
+      {
+        "path": "src/collaborators/revoke.test.ts",
+        "op": "create"
+      }
+    ],
+    "premises": [
+      {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request",
+        "gloss": "requirePermission re-reads roles on every request",
+        "anchors": [
+          {
+            "path": "src/authz/check.ts",
+            "symbol": "requirePermission",
+            "commit": "3f2a9c1e5b7d4f6a8c0e2b4d6f8a0c2e4b6d8f0a"
+          }
+        ],
+        "strenght": "must"
+      },
+      {
+        "subject": "authz.permission-evaluation",
+        "predicate": "bound",
+        "relation": "at-most",
+        "value": 50,
+        "unit": "ms",
+        "scope": "env:prod",
+        "strength": "should"
+      },
+      {
+        "subject": "collaborators.store",
+        "predicate": "authority",
+        "relation": "at-most",
+        "value": [
+          "collaborators-service"
+        ]
+      }
+    ],
+    "declaredEffects": [
+      {
+        "subject": "collaborators.revocation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-request"
+      }
+    ],
+    "cites": [
+      {
+        "kind": "message",
+        "ref": "msg_9"
+      }
+    ]
+  },
+  "fix": [
+    {
+      "op": "move",
+      "from": "/premises/0/strenght",
+      "path": "/premises/0/strength"
+    }
+  ]
+}

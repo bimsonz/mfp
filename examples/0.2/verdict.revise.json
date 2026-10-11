@@ -1,0 +1,22 @@
+{
+  "mfp": "0.2",
+  "kind": "verdict",
+  "confidence": "medium",
+  "outcome": "revise",
+  "reasons": [
+    {
+      "summary": "The new cache serves revoked permissions for the rest of the session",
+      "cites": [
+        {
+          "kind": "anchor",
+          "path": "src/authz/cache.ts",
+          "symbol": "permissionCache"
+        }
+      ]
+    },
+    {
+      "summary": "No test covers revocation during a live session"
+    }
+  ],
+  "residualRisk": "Even with eviction on revoke, a role change made directly in the database bypasses it"
+}

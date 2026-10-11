@@ -1,0 +1,486 @@
+{
+  "description": "Comparison vectors: what a premise and an effect, as whole propositions, come to.",
+  "cases": [
+    {
+      "description": "same subject, everywhere",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-call"
+      },
+      "outcome": "holds"
+    },
+    {
+      "description": "an effect on an ancestor speaks for the premise's subject",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "subject": "authz",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-call"
+      },
+      "outcome": "holds"
+    },
+    {
+      "description": "an effect on a descendant speaks for part of it",
+      "premise": {
+        "subject": "authz",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-call"
+      },
+      "outcome": "holds-in-part"
+    },
+    {
+      "description": "unrelated subjects",
+      "premise": {
+        "subject": "authz",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "subject": "billing",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "static"
+      },
+      "outcome": "unrelated"
+    },
+    {
+      "description": "siblings are unrelated",
+      "premise": {
+        "subject": "authz.a",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "subject": "authz.b",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "static"
+      },
+      "outcome": "unrelated"
+    },
+    {
+      "description": "disjoint scopes",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request",
+        "scope": "env:prod"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "static",
+        "scope": "env:staging"
+      },
+      "outcome": "unrelated"
+    },
+    {
+      "description": "an effect everywhere covers a scoped premise",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request",
+        "scope": "env:prod"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-call"
+      },
+      "outcome": "holds"
+    },
+    {
+      "description": "a scoped effect speaks for part of an unscoped premise",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-call",
+        "scope": "env:prod"
+      },
+      "outcome": "holds-in-part"
+    },
+    {
+      "description": "a narrower atom set covers part",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request",
+        "scope": "env:prod|staging"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-call",
+        "scope": "env:prod"
+      },
+      "outcome": "holds-in-part"
+    },
+    {
+      "description": "a dimension the effect does not constrain is covered",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request",
+        "scope": "env:prod;tenant:t1"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-call",
+        "scope": "tenant:t1|t2"
+      },
+      "outcome": "holds"
+    },
+    {
+      "description": "a contradiction in an intersecting scope",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request",
+        "scope": "env:prod|staging"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-session",
+        "scope": "env:prod"
+      },
+      "outcome": "contradicts"
+    },
+    {
+      "description": "a contradiction on a descendant still contradicts",
+      "premise": {
+        "subject": "authz",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "subject": "authz.cache",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-session"
+      },
+      "outcome": "contradicts"
+    },
+    {
+      "description": "strength is never read",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request",
+        "strength": "should"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-session"
+      },
+      "outcome": "contradicts"
+    },
+    {
+      "description": "an invariant is compared only by a model",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "invariant",
+        "relation": "is",
+        "value": "revocation takes effect on the next request"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-session"
+      },
+      "outcome": "undecided"
+    },
+    {
+      "description": "an invariant against an invariant",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "invariant",
+        "relation": "is",
+        "value": "a"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "invariant",
+        "relation": "is",
+        "value": "a"
+      },
+      "outcome": "undecided"
+    },
+    {
+      "description": "different predicates",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "consistency",
+        "relation": "is",
+        "value": "eventual"
+      },
+      "outcome": "unrelated"
+    },
+    {
+      "description": "a repeated scope dimension is unreadable",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request",
+        "scope": "env:prod;env:staging"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-call"
+      },
+      "outcome": "undecided"
+    },
+    {
+      "description": "unsorted invalidation events are unreadable",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-session"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-session invalidated-on b.x,a.y"
+      },
+      "outcome": "undecided"
+    },
+    {
+      "description": "a repeated invalidation event is unreadable",
+      "premise": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-session"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-session invalidated-on a.y,a.y"
+      },
+      "outcome": "undecided"
+    },
+    {
+      "description": "an ordering on itself is unreadable",
+      "premise": {
+        "subject": "deploy",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "deploy"
+      },
+      "effect": {
+        "subject": "deploy",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "migrate"
+      },
+      "outcome": "undecided"
+    },
+    {
+      "description": "a repeated shape field is unreadable",
+      "premise": {
+        "subject": "api.user",
+        "predicate": "shape",
+        "relation": "at-most",
+        "value": {
+          "type": "object",
+          "fields": [
+            {
+              "name": "id",
+              "shape": {
+                "type": "string"
+              },
+              "optional": false
+            },
+            {
+              "name": "id",
+              "shape": {
+                "type": "number"
+              },
+              "optional": false
+            }
+          ]
+        }
+      },
+      "effect": {
+        "subject": "api.user",
+        "predicate": "shape",
+        "relation": "is",
+        "value": {
+          "type": "string"
+        }
+      },
+      "outcome": "undecided"
+    },
+    {
+      "description": "an unreadable proposition on an unrelated subject is unrelated",
+      "premise": {
+        "subject": "billing",
+        "predicate": "freshness",
+        "relation": "at-most",
+        "value": "per-request",
+        "scope": "env:prod;env:staging"
+      },
+      "effect": {
+        "subject": "authz.permission-evaluation",
+        "predicate": "freshness",
+        "relation": "is",
+        "value": "per-call"
+      },
+      "outcome": "unrelated"
+    },
+    {
+      "description": "the same ordering",
+      "premise": {
+        "subject": "migrate",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "deploy"
+      },
+      "effect": {
+        "subject": "migrate",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "deploy"
+      },
+      "outcome": "holds"
+    },
+    {
+      "description": "an ordering reversed on one subject",
+      "premise": {
+        "subject": "migrate",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "deploy"
+      },
+      "effect": {
+        "subject": "migrate",
+        "predicate": "ordering",
+        "relation": "after",
+        "value": "deploy"
+      },
+      "outcome": "contradicts"
+    },
+    {
+      "description": "the same ordering written from the other event",
+      "premise": {
+        "subject": "migrate",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "deploy"
+      },
+      "effect": {
+        "subject": "deploy",
+        "predicate": "ordering",
+        "relation": "after",
+        "value": "migrate"
+      },
+      "outcome": "holds"
+    },
+    {
+      "description": "an ordering reversed, written from the other event",
+      "premise": {
+        "subject": "migrate",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "deploy"
+      },
+      "effect": {
+        "subject": "deploy",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "migrate"
+      },
+      "outcome": "contradicts"
+    },
+    {
+      "description": "orderings of different pairs",
+      "premise": {
+        "subject": "migrate",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "deploy"
+      },
+      "effect": {
+        "subject": "migrate",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "seed"
+      },
+      "outcome": "unrelated"
+    },
+    {
+      "description": "orderings on related subjects but different pairs",
+      "premise": {
+        "subject": "db.migrate",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "deploy"
+      },
+      "effect": {
+        "subject": "db",
+        "predicate": "ordering",
+        "relation": "before",
+        "value": "deploy"
+      },
+      "outcome": "unrelated"
+    }
+  ]
+}

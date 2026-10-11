@@ -1,0 +1,2721 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bimsonz.github.io/mfp/schema/0.2/mfp.schema.json",
+  "$defs": {
+    "Anchor": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json",
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repository-relative path."
+        },
+        "symbol": {
+          "type": "string",
+          "description": "A symbol within the file, e.g. a function or class name."
+        },
+        "commit": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/CommitId.json",
+          "description": "The commit the anchor was read at. Absent means the commit the driver is working against."
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "description": "A path, and optionally a symbol, in the repository, optionally pinned to a commit."
+    },
+    "CommitId": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/CommitId.json",
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$",
+      "description": "A git object id: 40 lowercase hex digits (SHA-1) or 64 (SHA-256)."
+    },
+    "AnchorCitation": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/AnchorCitation.json",
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "anchor"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repository-relative path."
+        },
+        "symbol": {
+          "type": "string",
+          "description": "A symbol within the file, e.g. a function or class name."
+        },
+        "commit": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/CommitId.json",
+          "description": "The commit the anchor was read at. Absent means the commit the driver is working against."
+        }
+      },
+      "required": [
+        "kind",
+        "path"
+      ],
+      "description": "A code location the claim rests on."
+    },
+    "MessageCitation": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/MessageCitation.json",
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "message"
+        },
+        "ref": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Ref.json"
+        }
+      },
+      "required": [
+        "kind",
+        "ref"
+      ],
+      "description": "A message in the conversation, by the identifier the driver gave it."
+    },
+    "Ref": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Ref.json",
+      "type": "string",
+      "minLength": 1,
+      "description": "An identifier the driver gave the model: a message, a tool call, an earlier\nMFP message or a decision. A model never invents one."
+    },
+    "ToolResultCitation": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/ToolResultCitation.json",
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "tool-result"
+        },
+        "ref": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Ref.json"
+        }
+      },
+      "required": [
+        "kind",
+        "ref"
+      ],
+      "description": "The result of a tool call, by the call's identifier."
+    },
+    "RecordCitation": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/RecordCitation.json",
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "record"
+        },
+        "ref": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Ref.json"
+        }
+      },
+      "required": [
+        "kind",
+        "ref"
+      ],
+      "description": "An earlier MFP message, by the identifier its receiver gave it."
+    },
+    "Citations": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Citations.json",
+      "type": "array",
+      "items": {
+        "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+      },
+      "minItems": 1,
+      "description": "A citation list that must not be empty."
+    },
+    "Citation": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json",
+      "anyOf": [
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/AnchorCitation.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/MessageCitation.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/ToolResultCitation.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/RecordCitation.json"
+        }
+      ],
+      "description": "What a claim rests on."
+    },
+    "PrimitiveShape": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/PrimitiveShape.json",
+      "type": "object",
+      "properties": {
+        "type": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "unknown"
+            },
+            {
+              "type": "string",
+              "const": "never"
+            },
+            {
+              "type": "string",
+              "const": "string"
+            },
+            {
+              "type": "string",
+              "const": "number"
+            },
+            {
+              "type": "string",
+              "const": "boolean"
+            },
+            {
+              "type": "string",
+              "const": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "description": "`unknown` admits every value and `never` none."
+    },
+    "LiteralShape": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/LiteralShape.json",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "literal"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "value"
+      ]
+    },
+    "ArrayShape": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/ArrayShape.json",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "array"
+        },
+        "items": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Shape.json"
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ]
+    },
+    "Shape": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Shape.json",
+      "anyOf": [
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/PrimitiveShape.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/LiteralShape.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/ArrayShape.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/ObjectShape.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/UnionShape.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/OpaqueShape.json"
+        }
+      ],
+      "description": "A structural type, the value of a `shape` proposition. Objects list their\nfields; `opaque` names a type the writer could not see into."
+    },
+    "ObjectShape": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/ObjectShape.json",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "object"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/ShapeField.json"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "fields"
+      ]
+    },
+    "ShapeField": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/ShapeField.json",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "shape": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Shape.json"
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "Whether the field may be absent."
+        }
+      },
+      "required": [
+        "name",
+        "shape",
+        "optional"
+      ]
+    },
+    "UnionShape": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/UnionShape.json",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "union"
+        },
+        "of": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Shape.json"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "of"
+      ]
+    },
+    "OpaqueShape": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/OpaqueShape.json",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "opaque"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ]
+    },
+    "FreshnessPremise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/FreshnessPremise.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "must"
+            },
+            {
+              "type": "string",
+              "const": "should"
+            }
+          ],
+          "default": "must",
+          "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+        },
+        "predicate": {
+          "type": "string",
+          "const": "freshness"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/FreshnessValue.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "SubjectKey": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$",
+      "description": "A named concept in the codebase, as dot-separated segments of lowercase\nletters, digits and inner hyphens, e.g. `authz.permission-evaluation`. Keys\nare hierarchical: `authz` is an ancestor of `authz.permission-evaluation`."
+    },
+    "Scope": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json",
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*:[a-z0-9][a-z0-9._-]*(?:\\|[a-z0-9][a-z0-9._-]*)*(?:;[a-z0-9][a-z0-9._-]*:[a-z0-9][a-z0-9._-]*(?:\\|[a-z0-9][a-z0-9._-]*)*)*$",
+      "description": "Where a proposition holds, as `;`-separated `dimension:atom|atom` parts, e.g.\n`env:prod|staging;tenant:t1`. A dimension appears at most once. Absent means\neverywhere."
+    },
+    "FreshnessValue": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/FreshnessValue.json",
+      "type": "string",
+      "pattern": "^(?:per-call|per-request|per-session|static|ttl:[0-9]+(?:\\.[0-9]+)?)$",
+      "description": "How stale a reader of the subject can be, from least to most:\n`per-call`, `per-request`, `per-session`, `ttl:<seconds>` and `static`."
+    },
+    "ConsistencyPremise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/ConsistencyPremise.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "must"
+            },
+            {
+              "type": "string",
+              "const": "should"
+            }
+          ],
+          "default": "must",
+          "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+        },
+        "predicate": {
+          "type": "string",
+          "const": "consistency"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/ConsistencyValue.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "ConsistencyValue": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/ConsistencyValue.json",
+      "type": "string",
+      "pattern": "^(?:eventual|read-your-writes|linearizable|bounded:[0-9]+(?:\\.[0-9]+)?)$",
+      "description": "How strong a reader's view of the subject is, from weakest to strongest:\n`eventual`, `bounded:<seconds>` (a smaller bound is stronger),\n`read-your-writes` and `linearizable`."
+    },
+    "CardinalityPremise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/CardinalityPremise.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "must"
+            },
+            {
+              "type": "string",
+              "const": "should"
+            }
+          ],
+          "default": "must",
+          "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+        },
+        "predicate": {
+          "type": "string",
+          "const": "cardinality"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/CardinalityValue.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "CardinalityValue": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/CardinalityValue.json",
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "exactly-once"
+        },
+        {
+          "type": "string",
+          "const": "at-most-once"
+        },
+        {
+          "type": "string",
+          "const": "at-least-once"
+        },
+        {
+          "type": "string",
+          "const": "any"
+        }
+      ],
+      "description": "How many times something happens, from strongest guarantee to weakest."
+    },
+    "BoundPremise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/BoundPremise.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "must"
+            },
+            {
+              "type": "string",
+              "const": "should"
+            }
+          ],
+          "default": "must",
+          "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+        },
+        "predicate": {
+          "type": "string",
+          "const": "bound"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Unit.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value",
+        "unit"
+      ]
+    },
+    "Unit": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Unit.json",
+      "type": "string",
+      "pattern": "^\\S+$",
+      "description": "A unit of measure, e.g. `ms`, `bytes`, `requests/s`."
+    },
+    "PresencePremise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/PresencePremise.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "must"
+            },
+            {
+              "type": "string",
+              "const": "should"
+            }
+          ],
+          "default": "must",
+          "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+        },
+        "predicate": {
+          "type": "string",
+          "const": "presence"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "PurityPremise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/PurityPremise.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "must"
+            },
+            {
+              "type": "string",
+              "const": "should"
+            }
+          ],
+          "default": "must",
+          "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+        },
+        "predicate": {
+          "type": "string",
+          "const": "purity"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "IdempotentPremise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/IdempotentPremise.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "must"
+            },
+            {
+              "type": "string",
+              "const": "should"
+            }
+          ],
+          "default": "must",
+          "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+        },
+        "predicate": {
+          "type": "string",
+          "const": "idempotent"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "AuthorityPremise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/AuthorityPremise.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "must"
+            },
+            {
+              "type": "string",
+              "const": "should"
+            }
+          ],
+          "default": "must",
+          "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+        },
+        "predicate": {
+          "type": "string",
+          "const": "authority"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            }
+          ]
+        },
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Writer.json"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "Writer": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Writer.json",
+      "type": "string",
+      "pattern": "^[^\\s,]+$",
+      "description": "A writer of a subject: a name with no spaces or commas."
+    },
+    "ShapePremise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/ShapePremise.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "must"
+            },
+            {
+              "type": "string",
+              "const": "should"
+            }
+          ],
+          "default": "must",
+          "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+        },
+        "predicate": {
+          "type": "string",
+          "const": "shape"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Shape.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "OrderingPremise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/OrderingPremise.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "must"
+            },
+            {
+              "type": "string",
+              "const": "should"
+            }
+          ],
+          "default": "must",
+          "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+        },
+        "predicate": {
+          "type": "string",
+          "const": "ordering"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "before"
+            },
+            {
+              "type": "string",
+              "const": "after"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ],
+      "description": "The subject is the first event of the pair and the value the second."
+    },
+    "InvariantPremise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/InvariantPremise.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "strength": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "must"
+            },
+            {
+              "type": "string",
+              "const": "should"
+            }
+          ],
+          "default": "must",
+          "description": "The holder's kind of reliance, not a confidence. `must`: the holder breaks\nif the proposition is false. `should`: it degrades. Comparison never reads it."
+        },
+        "predicate": {
+          "type": "string",
+          "const": "invariant"
+        },
+        "relation": {
+          "type": "string",
+          "const": "is"
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Text.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ],
+      "description": "Free text, compared only by a model."
+    },
+    "Text": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Text.json",
+      "type": "string",
+      "pattern": "\\S",
+      "description": "Text a reader is meant to read: at least one non-space character."
+    },
+    "FreshnessEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/FreshnessEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "freshness"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/FreshnessValue.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "InvalidationEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/InvalidationEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "freshness"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/InvalidationValue.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ],
+      "description": "Only an effect takes the invalidation form: a premise states the freshness it relies on."
+    },
+    "InvalidationValue": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/InvalidationValue.json",
+      "type": "string",
+      "pattern": "^(?:per-call|per-request|per-session|static|ttl:[0-9]+(?:\\.[0-9]+)?) invalidated-on [a-z0-9]+(?:[.-][a-z0-9]+)*(?:,[a-z0-9]+(?:[.-][a-z0-9]+)*)*$",
+      "description": "The effect form \"cached at a freshness, evicted on these events\":\n`<freshness> invalidated-on <event>,<event>`, the events sorted, each once."
+    },
+    "ConsistencyEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/ConsistencyEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "consistency"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/ConsistencyValue.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "CardinalityEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/CardinalityEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "cardinality"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/CardinalityValue.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "BoundEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/BoundEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "bound"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Unit.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value",
+        "unit"
+      ]
+    },
+    "PresenceEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/PresenceEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "presence"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "PurityEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/PurityEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "purity"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "IdempotentEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/IdempotentEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "idempotent"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "not"
+            }
+          ]
+        },
+        "value": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "AuthorityEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/AuthorityEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "authority"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            }
+          ]
+        },
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Writer.json"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "ShapeEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/ShapeEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "shape"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "is"
+            },
+            {
+              "type": "string",
+              "const": "at-most"
+            },
+            {
+              "type": "string",
+              "const": "at-least"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Shape.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ]
+    },
+    "OrderingEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/OrderingEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "ordering"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "before"
+            },
+            {
+              "type": "string",
+              "const": "after"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ],
+      "description": "The subject is the first event of the pair and the value the second."
+    },
+    "InvariantEffect": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/InvariantEffect.json",
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/SubjectKey.json"
+        },
+        "scope": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Scope.json"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Anchor.json"
+          }
+        },
+        "gloss": {
+          "type": "string",
+          "description": "A one-line human gloss."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        },
+        "predicate": {
+          "type": "string",
+          "const": "invariant"
+        },
+        "relation": {
+          "type": "string",
+          "const": "is"
+        },
+        "value": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Text.json"
+        }
+      },
+      "required": [
+        "subject",
+        "predicate",
+        "relation",
+        "value"
+      ],
+      "description": "Free text, compared only by a model."
+    },
+    "FootprintEntry": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/FootprintEntry.json",
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "op": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "edit"
+            },
+            {
+              "type": "string",
+              "const": "create"
+            },
+            {
+              "type": "string",
+              "const": "delete"
+            }
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "op"
+      ],
+      "description": "A path or symbol a change edits, creates or deletes."
+    },
+    "Intent": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Intent.json",
+      "type": "object",
+      "properties": {
+        "mfp": {
+          "type": "string",
+          "const": "0.2",
+          "description": "The wire version."
+        },
+        "kind": {
+          "type": "string",
+          "const": "intent"
+        },
+        "profile": {
+          "type": "string",
+          "format": "uri",
+          "description": "The profile the message conforms to, by URI. Absent means the core profile."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "low"
+            },
+            {
+              "type": "string",
+              "const": "medium"
+            },
+            {
+              "type": "string",
+              "const": "high"
+            }
+          ],
+          "description": "The model's own confidence in this report. An opinion about an opinion: it never carries weight."
+        },
+        "goal": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Text.json",
+          "description": "What the change will achieve, in one or two sentences."
+        },
+        "footprint": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/FootprintEntry.json"
+          },
+          "description": "The paths and symbols it expects to edit, create or delete."
+        },
+        "premises": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/PremiseProposition.json"
+          },
+          "description": "What it relies on, about code it does not own."
+        },
+        "declaredEffects": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/EffectProposition.json"
+          },
+          "description": "Effects it expects to cause. A receiver derives effects; these are advisory."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        }
+      },
+      "required": [
+        "mfp",
+        "kind",
+        "goal",
+        "premises"
+      ],
+      "description": "What a model will do, and what it relies on, before it writes code."
+    },
+    "PremiseProposition": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/PremiseProposition.json",
+      "anyOf": [
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/FreshnessPremise.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/ConsistencyPremise.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/CardinalityPremise.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/BoundPremise.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/PresencePremise.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/PurityPremise.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/IdempotentPremise.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/AuthorityPremise.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/ShapePremise.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/OrderingPremise.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/InvariantPremise.json"
+        }
+      ],
+      "description": "What a model relies on about code it does not own."
+    },
+    "EffectProposition": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/EffectProposition.json",
+      "anyOf": [
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/FreshnessEffect.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/InvalidationEffect.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/ConsistencyEffect.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/CardinalityEffect.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/BoundEffect.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/PresenceEffect.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/PurityEffect.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/IdempotentEffect.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/AuthorityEffect.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/ShapeEffect.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/OrderingEffect.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/InvariantEffect.json"
+        }
+      ],
+      "description": "What a model expects a change to alter."
+    },
+    "Premise": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Premise.json",
+      "type": "object",
+      "properties": {
+        "mfp": {
+          "type": "string",
+          "const": "0.2",
+          "description": "The wire version."
+        },
+        "kind": {
+          "type": "string",
+          "const": "premise"
+        },
+        "profile": {
+          "type": "string",
+          "format": "uri",
+          "description": "The profile the message conforms to, by URI. Absent means the core profile."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "low"
+            },
+            {
+              "type": "string",
+              "const": "medium"
+            },
+            {
+              "type": "string",
+              "const": "high"
+            }
+          ],
+          "description": "The model's own confidence in this report. An opinion about an opinion: it never carries weight."
+        },
+        "premise": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/PremiseProposition.json"
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        }
+      },
+      "required": [
+        "mfp",
+        "kind",
+        "premise"
+      ],
+      "description": "One more thing the model relies on, after its intent."
+    },
+    "Alternative": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Alternative.json",
+      "type": "object",
+      "properties": {
+        "option": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Text.json"
+        },
+        "reasonRejected": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Text.json"
+        }
+      },
+      "required": [
+        "option",
+        "reasonRejected"
+      ]
+    },
+    "Decision": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Decision.json",
+      "type": "object",
+      "properties": {
+        "mfp": {
+          "type": "string",
+          "const": "0.2",
+          "description": "The wire version."
+        },
+        "kind": {
+          "type": "string",
+          "const": "decision"
+        },
+        "profile": {
+          "type": "string",
+          "format": "uri",
+          "description": "The profile the message conforms to, by URI. Absent means the core profile."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "low"
+            },
+            {
+              "type": "string",
+              "const": "medium"
+            },
+            {
+              "type": "string",
+              "const": "high"
+            }
+          ],
+          "description": "The model's own confidence in this report. An opinion about an opinion: it never carries weight."
+        },
+        "question": {
+          "type": "string"
+        },
+        "chosen": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Text.json"
+        },
+        "rationale": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Text.json"
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Alternative.json"
+          }
+        },
+        "reversible": {
+          "type": "boolean"
+        },
+        "cites": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citations.json"
+        }
+      },
+      "required": [
+        "mfp",
+        "kind",
+        "chosen",
+        "rationale",
+        "alternatives",
+        "reversible",
+        "cites"
+      ],
+      "description": "A choice the model made, why, and what it rejected."
+    },
+    "Observation": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Observation.json",
+      "type": "object",
+      "properties": {
+        "mfp": {
+          "type": "string",
+          "const": "0.2",
+          "description": "The wire version."
+        },
+        "kind": {
+          "type": "string",
+          "const": "observation"
+        },
+        "profile": {
+          "type": "string",
+          "format": "uri",
+          "description": "The profile the message conforms to, by URI. Absent means the core profile."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "low"
+            },
+            {
+              "type": "string",
+              "const": "medium"
+            },
+            {
+              "type": "string",
+              "const": "high"
+            }
+          ],
+          "description": "The model's own confidence in this report. An opinion about an opinion: it never carries weight."
+        },
+        "category": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Token.json",
+          "description": "What kind of thing was noticed. Open in the core; a profile may close it."
+        },
+        "importance": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "low"
+            },
+            {
+              "type": "string",
+              "const": "medium"
+            },
+            {
+              "type": "string",
+              "const": "high"
+            }
+          ]
+        },
+        "summary": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Text.json"
+        },
+        "cites": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citations.json"
+        }
+      },
+      "required": [
+        "mfp",
+        "kind",
+        "category",
+        "importance",
+        "summary",
+        "cites"
+      ],
+      "description": "Something the model noticed, and what it rests on."
+    },
+    "Token": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Token.json",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "description": "A lowercase token: letters, digits and inner hyphens, e.g. `request-changes`."
+    },
+    "Stance": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Stance.json",
+      "type": "object",
+      "properties": {
+        "mfp": {
+          "type": "string",
+          "const": "0.2",
+          "description": "The wire version."
+        },
+        "kind": {
+          "type": "string",
+          "const": "stance"
+        },
+        "profile": {
+          "type": "string",
+          "format": "uri",
+          "description": "The profile the message conforms to, by URI. Absent means the core profile."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "low"
+            },
+            {
+              "type": "string",
+              "const": "medium"
+            },
+            {
+              "type": "string",
+              "const": "high"
+            }
+          ],
+          "description": "The model's own confidence in this report. An opinion about an opinion: it never carries weight."
+        },
+        "decision": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Ref.json",
+          "description": "The decision, by the identifier the driver gave it."
+        },
+        "stance": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "followed"
+            },
+            {
+              "type": "string",
+              "const": "distinguished"
+            },
+            {
+              "type": "string",
+              "const": "overrule-requested"
+            }
+          ]
+        },
+        "argument": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Text.json",
+          "description": "Why the decision applies, does not apply, or should be overruled."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        }
+      },
+      "required": [
+        "mfp",
+        "kind",
+        "decision",
+        "stance",
+        "argument"
+      ],
+      "description": "How the model's work relates to an earlier decision it met as precedent."
+    },
+    "Reason": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Reason.json",
+      "type": "object",
+      "properties": {
+        "summary": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Text.json"
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        }
+      },
+      "required": [
+        "summary"
+      ]
+    },
+    "Verdict": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Verdict.json",
+      "type": "object",
+      "properties": {
+        "mfp": {
+          "type": "string",
+          "const": "0.2",
+          "description": "The wire version."
+        },
+        "kind": {
+          "type": "string",
+          "const": "verdict"
+        },
+        "profile": {
+          "type": "string",
+          "format": "uri",
+          "description": "The profile the message conforms to, by URI. Absent means the core profile."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "low"
+            },
+            {
+              "type": "string",
+              "const": "medium"
+            },
+            {
+              "type": "string",
+              "const": "high"
+            }
+          ],
+          "description": "The model's own confidence in this report. An opinion about an opinion: it never carries weight."
+        },
+        "outcome": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Token.json",
+          "description": "The outcome, as a token. The core profile's vocabulary is `accept`,\n`revise`, `reject` and `defer`; a profile may replace it."
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Reason.json"
+          },
+          "minItems": 1
+        },
+        "residualRisk": {
+          "type": "string",
+          "description": "What could still go wrong if the outcome is taken."
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Citation.json"
+          }
+        }
+      },
+      "required": [
+        "mfp",
+        "kind",
+        "outcome",
+        "reasons"
+      ],
+      "description": "The outcome the model thinks a piece of work should have. An opinion, never a ruling."
+    },
+    "ProfileMember": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/ProfileMember.json",
+      "type": "object",
+      "properties": {
+        "kind": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "intent"
+            },
+            {
+              "type": "string",
+              "const": "premise"
+            },
+            {
+              "type": "string",
+              "const": "decision"
+            },
+            {
+              "type": "string",
+              "const": "observation"
+            },
+            {
+              "type": "string",
+              "const": "stance"
+            },
+            {
+              "type": "string",
+              "const": "verdict"
+            }
+          ],
+          "description": "`<kind>`: the message kind the member belongs to."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "`<prefix>/<name>`."
+        },
+        "schema": {
+          "description": "A JSON Schema for the member's value."
+        },
+        "required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether a message of that kind must carry it."
+        }
+      },
+      "required": [
+        "kind",
+        "name",
+        "schema"
+      ],
+      "description": "A message member a profile adds, under its own prefix."
+    },
+    "Profile": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Profile.json",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uri",
+          "description": "The profile's URI. Messages name it in `profile`."
+        },
+        "mfp": {
+          "type": "string",
+          "const": "0.2",
+          "description": "The MFP version the profile narrows."
+        },
+        "title": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Text.json"
+        },
+        "prefix": {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Prefix.json",
+          "description": "The prefix its members are named under. Required when it defines members."
+        },
+        "vocabularies": {
+          "type": "object",
+          "properties": {
+            "verdict.outcome": {
+              "type": "array",
+              "items": {
+                "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Token.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "observation.category": {
+              "type": "array",
+              "items": {
+                "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Token.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          },
+          "description": "The open vocabularies it closes, each to a non-empty set of tokens."
+        },
+        "require": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional core members it requires, as `<kind>.<member>`, e.g. `intent.footprint`."
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "https://bimsonz.github.io/mfp/schema/0.2/ProfileMember.json"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "mfp",
+        "title"
+      ],
+      "description": "A profile: a named narrowing of the core for one domain. It may close the\nopen vocabularies, require optional members, and add members under its\nprefix. It can only narrow: every message valid under a profile is valid\nunder the core wire schema."
+    },
+    "Prefix": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Prefix.json",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*(?:\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$",
+      "description": "A reverse-DNS name a vendor controls, e.g. `org.example.review`. A\nprofile's members are named `<prefix>/<name>`."
+    },
+    "Predicate": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Predicate.json",
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "freshness"
+        },
+        {
+          "type": "string",
+          "const": "consistency"
+        },
+        {
+          "type": "string",
+          "const": "cardinality"
+        },
+        {
+          "type": "string",
+          "const": "bound"
+        },
+        {
+          "type": "string",
+          "const": "presence"
+        },
+        {
+          "type": "string",
+          "const": "purity"
+        },
+        {
+          "type": "string",
+          "const": "idempotent"
+        },
+        {
+          "type": "string",
+          "const": "authority"
+        },
+        {
+          "type": "string",
+          "const": "shape"
+        },
+        {
+          "type": "string",
+          "const": "ordering"
+        },
+        {
+          "type": "string",
+          "const": "invariant"
+        }
+      ],
+      "description": "The dimension a proposition talks about. Each predicate orders its values; see lattices.md."
+    },
+    "Relation": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Relation.json",
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "is"
+        },
+        {
+          "type": "string",
+          "const": "at-most"
+        },
+        {
+          "type": "string",
+          "const": "at-least"
+        },
+        {
+          "type": "string",
+          "const": "not"
+        },
+        {
+          "type": "string",
+          "const": "before"
+        },
+        {
+          "type": "string",
+          "const": "after"
+        }
+      ],
+      "description": "How a proposition's value sits on its predicate's order. Each predicate takes some of these."
+    },
+    "Message": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bimsonz.github.io/mfp/schema/0.2/Message.json",
+      "anyOf": [
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Intent.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Premise.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Decision.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Observation.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Stance.json"
+        },
+        {
+          "$ref": "https://bimsonz.github.io/mfp/schema/0.2/Verdict.json"
+        }
+      ],
+      "description": "Any MFP 0.2 message."
+    }
+  }
+}

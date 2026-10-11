@@ -1,0 +1,11 @@
+{
+  "mfp": "0.2",
+  "kind": "premise",
+  "premise": {
+    "subject": "db.migrate",
+    "predicate": "ordering",
+    "relation": "before",
+    "value": "app.deploy",
+    "strength": "must"
+  }
+}

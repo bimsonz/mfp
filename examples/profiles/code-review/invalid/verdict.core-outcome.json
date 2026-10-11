@@ -1,0 +1,31 @@
+{
+  "description": "A profile replaces the core vocabulary: `accept` is not one of its outcomes.",
+  "against": "profile",
+  "message": {
+    "mfp": "0.2",
+    "kind": "verdict",
+    "profile": "https://example.org/mfp/profiles/code-review/0.2",
+    "outcome": "accept",
+    "reasons": [
+      {
+        "summary": "The retry loop resends a payment request after a timeout",
+        "cites": [
+          {
+            "kind": "anchor",
+            "path": "src/billing/charge.ts",
+            "symbol": "chargeCard"
+          }
+        ]
+      }
+    ],
+    "residualRisk": "A timeout after the provider accepted the charge still double-bills",
+    "org.example.code-review/blocking": true
+  },
+  "fix": [
+    {
+      "op": "replace",
+      "path": "/outcome",
+      "value": "approve"
+    }
+  ]
+}

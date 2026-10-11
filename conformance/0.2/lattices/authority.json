@@ -1,0 +1,149 @@
+{
+  "description": "Region vectors: how an effect's claim sits against a premise's, on one predicate.",
+  "cases": [
+    {
+      "predicate": "authority",
+      "premise": {
+        "relation": "at-most",
+        "value": [
+          "billing"
+        ]
+      },
+      "effect": {
+        "relation": "is",
+        "value": [
+          "billing"
+        ]
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "authority",
+      "premise": {
+        "relation": "at-most",
+        "value": [
+          "billing"
+        ]
+      },
+      "effect": {
+        "relation": "is",
+        "value": [
+          "admin",
+          "billing"
+        ]
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "authority",
+      "premise": {
+        "relation": "is",
+        "value": [
+          "a",
+          "b"
+        ]
+      },
+      "effect": {
+        "relation": "is",
+        "value": [
+          "b",
+          "a"
+        ]
+      },
+      "region": "within",
+      "note": "a writer set is a set"
+    },
+    {
+      "predicate": "authority",
+      "premise": {
+        "relation": "at-least",
+        "value": [
+          "a"
+        ]
+      },
+      "effect": {
+        "relation": "is",
+        "value": [
+          "a",
+          "b"
+        ]
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "authority",
+      "premise": {
+        "relation": "at-least",
+        "value": [
+          "a"
+        ]
+      },
+      "effect": {
+        "relation": "is",
+        "value": [
+          "b"
+        ]
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "authority",
+      "premise": {
+        "relation": "at-most",
+        "value": [
+          "a",
+          "b"
+        ]
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": [
+          "a"
+        ]
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "authority",
+      "premise": {
+        "relation": "at-most",
+        "value": [
+          "a"
+        ]
+      },
+      "effect": {
+        "relation": "at-least",
+        "value": [
+          "a"
+        ]
+      },
+      "region": "overlap"
+    },
+    {
+      "predicate": "authority",
+      "premise": {
+        "relation": "is",
+        "value": []
+      },
+      "effect": {
+        "relation": "is",
+        "value": [
+          "a"
+        ]
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "authority",
+      "premise": {
+        "relation": "at-most",
+        "value": []
+      },
+      "effect": {
+        "relation": "is",
+        "value": []
+      },
+      "region": "within"
+    }
+  ]
+}

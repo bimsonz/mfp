@@ -1,0 +1,359 @@
+{
+  "description": "Region vectors: how an effect's claim sits against a premise's, on one predicate.",
+  "cases": [
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "per-call"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "per-request"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "per-session"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "per-session"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "per-request"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "per-session"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "ttl:60"
+      },
+      "region": "overlap",
+      "note": "per-session and a TTL are incomparable"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "ttl:60"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "ttl:30"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "ttl:60"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "ttl:120"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "ttl:60"
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": "ttl:30"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "ttl:60"
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": "ttl:120"
+      },
+      "region": "overlap"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-least",
+        "value": "per-session"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "static"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "static"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "per-session"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "is",
+        "value": "static"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "ttl:3600"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "not",
+        "value": "static"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "per-request"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "not",
+        "value": "per-request"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "per-request"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "not",
+        "value": "per-session"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "ttl:10"
+      },
+      "region": "overlap",
+      "note": "a complement of per-session says nothing about a TTL"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "relation": "not",
+        "value": "static"
+      },
+      "region": "overlap",
+      "note": "not is decided only against a single value"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "not",
+        "value": "static"
+      },
+      "effect": {
+        "relation": "not",
+        "value": "static"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "is",
+        "value": "per-request"
+      },
+      "effect": {
+        "relation": "not",
+        "value": "per-call"
+      },
+      "region": "overlap"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-least",
+        "value": "per-request"
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": "per-call"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "ttl:0"
+      },
+      "region": "disjoint",
+      "note": "every TTL is staler than per-request"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "ttl:60"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "per-session"
+      },
+      "region": "overlap"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "ttl:10"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "ttl:10.0"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "per-session invalidated-on authz.revoke"
+      },
+      "region": "overlap",
+      "note": "a change by another event is stale per-session"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "per-session"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "per-session invalidated-on authz.revoke"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "per-call"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "static invalidated-on authz.revoke"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "per-request"
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": "per-call invalidated-on authz.revoke"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-most",
+        "value": "ttl:60"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "ttl:30 invalidated-on authz.grant,authz.revoke"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "not",
+        "value": "per-request"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "static invalidated-on authz.revoke"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "freshness",
+      "premise": {
+        "relation": "at-least",
+        "value": "static"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "static invalidated-on authz.revoke"
+      },
+      "region": "disjoint",
+      "note": "an evicting cache is not static"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "description": "An ordering takes `before` or `after`.",
+  "against": "wire",
+  "message": {
+    "mfp": "0.2",
+    "kind": "premise",
+    "premise": {
+      "subject": "db.migrate",
+      "predicate": "ordering",
+      "relation": "at-most",
+      "value": "app.deploy",
+      "strength": "must"
+    }
+  },
+  "fix": [
+    {
+      "op": "replace",
+      "path": "/premise/relation",
+      "value": "before"
+    }
+  ]
+}

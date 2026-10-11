@@ -1,0 +1,54 @@
+{
+  "description": "A shape is a structural type as JSON, not a JSON-encoded string.",
+  "against": "wire",
+  "message": {
+    "mfp": "0.2",
+    "kind": "premise",
+    "premise": {
+      "subject": "api.users.get",
+      "predicate": "shape",
+      "relation": "at-most",
+      "value": "{\"type\": \"object\", \"fields\": [{\"name\": \"id\", \"shape\": {\"type\": \"string\"}, \"optional\": false}, {\"name\": \"email\", \"shape\": {\"type\": \"union\", \"of\": [{\"type\": \"string\"}, {\"type\": \"null\"}]}, \"optional\": true}]}",
+      "gloss": "The client reads id, and email when present"
+    },
+    "cites": [
+      {
+        "kind": "tool-result",
+        "ref": "call_04"
+      }
+    ]
+  },
+  "fix": [
+    {
+      "op": "replace",
+      "path": "/premise/value",
+      "value": {
+        "type": "object",
+        "fields": [
+          {
+            "name": "id",
+            "shape": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          {
+            "name": "email",
+            "shape": {
+              "type": "union",
+              "of": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "optional": true
+          }
+        ]
+      }
+    }
+  ]
+}

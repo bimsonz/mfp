@@ -20,7 +20,11 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Schema matches its source
+      - name: Generated schemas match their source
         run: pnpm check:drift
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Lint
+        run: pnpm lint
       - name: Conformance
         run: pnpm conformance

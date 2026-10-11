@@ -1,0 +1,197 @@
+{
+  "description": "The orders, as Hasse covers between named values (a family such as ttl:<n> is one node), and as pairwise vectors: true, false, or unknown where the two are incomparable but may still stand in either relation.",
+  "covers": {
+    "freshness": [
+      [
+        "per-call",
+        "per-request"
+      ],
+      [
+        "per-request",
+        "per-session"
+      ],
+      [
+        "per-request",
+        "ttl:<n>"
+      ],
+      [
+        "per-session",
+        "static"
+      ],
+      [
+        "ttl:<n>",
+        "static"
+      ]
+    ],
+    "consistency": [
+      [
+        "eventual",
+        "bounded:<t>"
+      ],
+      [
+        "bounded:<t>",
+        "read-your-writes"
+      ],
+      [
+        "read-your-writes",
+        "linearizable"
+      ]
+    ],
+    "cardinality": [
+      [
+        "exactly-once",
+        "at-most-once"
+      ],
+      [
+        "exactly-once",
+        "at-least-once"
+      ],
+      [
+        "at-most-once",
+        "any"
+      ],
+      [
+        "at-least-once",
+        "any"
+      ]
+    ]
+  },
+  "representatives": {
+    "ttl:<n>": "ttl:60",
+    "bounded:<t>": "bounded:5"
+  },
+  "leq": [
+    {
+      "predicate": "freshness",
+      "lower": "per-call",
+      "upper": "per-request",
+      "leq": true
+    },
+    {
+      "predicate": "freshness",
+      "lower": "per-session",
+      "upper": "ttl:10",
+      "leq": "unknown"
+    },
+    {
+      "predicate": "freshness",
+      "lower": "ttl:10",
+      "upper": "per-session",
+      "leq": "unknown"
+    },
+    {
+      "predicate": "freshness",
+      "lower": "ttl:10",
+      "upper": "ttl:20",
+      "leq": true
+    },
+    {
+      "predicate": "freshness",
+      "lower": "ttl:20",
+      "upper": "ttl:10",
+      "leq": false
+    },
+    {
+      "predicate": "freshness",
+      "lower": "per-request",
+      "upper": "ttl:0",
+      "leq": true
+    },
+    {
+      "predicate": "freshness",
+      "lower": "ttl:0",
+      "upper": "static",
+      "leq": true
+    },
+    {
+      "predicate": "freshness",
+      "lower": "static",
+      "upper": "ttl:9999",
+      "leq": false
+    },
+    {
+      "predicate": "freshness",
+      "lower": "per-session",
+      "upper": "static",
+      "leq": true
+    },
+    {
+      "predicate": "freshness",
+      "lower": "per-call",
+      "upper": "per-session",
+      "leq": true
+    },
+    {
+      "predicate": "freshness",
+      "lower": "static",
+      "upper": "per-call",
+      "leq": false
+    },
+    {
+      "predicate": "consistency",
+      "lower": "eventual",
+      "upper": "bounded:100",
+      "leq": true
+    },
+    {
+      "predicate": "consistency",
+      "lower": "bounded:100",
+      "upper": "bounded:5",
+      "leq": true
+    },
+    {
+      "predicate": "consistency",
+      "lower": "bounded:5",
+      "upper": "bounded:100",
+      "leq": false
+    },
+    {
+      "predicate": "consistency",
+      "lower": "bounded:0",
+      "upper": "read-your-writes",
+      "leq": true
+    },
+    {
+      "predicate": "consistency",
+      "lower": "read-your-writes",
+      "upper": "linearizable",
+      "leq": true
+    },
+    {
+      "predicate": "consistency",
+      "lower": "linearizable",
+      "upper": "eventual",
+      "leq": false
+    },
+    {
+      "predicate": "cardinality",
+      "lower": "exactly-once",
+      "upper": "at-most-once",
+      "leq": true
+    },
+    {
+      "predicate": "cardinality",
+      "lower": "at-most-once",
+      "upper": "at-least-once",
+      "leq": false
+    },
+    {
+      "predicate": "cardinality",
+      "lower": "at-least-once",
+      "upper": "at-most-once",
+      "leq": false
+    },
+    {
+      "predicate": "cardinality",
+      "lower": "at-most-once",
+      "upper": "any",
+      "leq": true
+    },
+    {
+      "predicate": "cardinality",
+      "lower": "any",
+      "upper": "exactly-once",
+      "leq": false
+    }
+  ]
+}

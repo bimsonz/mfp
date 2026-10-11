@@ -1,0 +1,28 @@
+{
+  "mfp": "0.2",
+  "kind": "intent",
+  "goal": "Cache permission checks, evicting on revocation",
+  "premises": [
+    {
+      "subject": "authz.roles",
+      "predicate": "consistency",
+      "relation": "at-least",
+      "value": "read-your-writes"
+    }
+  ],
+  "declaredEffects": [
+    {
+      "subject": "authz.permission-evaluation",
+      "predicate": "freshness",
+      "relation": "is",
+      "value": "per-session invalidated-on authz.grant,authz.revoke",
+      "gloss": "Permissions are cached for the session and evicted when a role changes"
+    },
+    {
+      "subject": "authz.permission-evaluation",
+      "predicate": "purity",
+      "relation": "not",
+      "value": true
+    }
+  ]
+}

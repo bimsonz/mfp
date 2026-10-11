@@ -1,0 +1,162 @@
+{
+  "description": "Region vectors: how an effect's claim sits against a premise's, on one predicate.",
+  "cases": [
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "at-least",
+        "value": "read-your-writes"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "linearizable"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "at-least",
+        "value": "read-your-writes"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "eventual"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "at-least",
+        "value": "read-your-writes"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "bounded:5"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "at-least",
+        "value": "bounded:10"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "bounded:5"
+      },
+      "region": "within",
+      "note": "a smaller bound is stronger"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "at-least",
+        "value": "bounded:5"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "bounded:10"
+      },
+      "region": "disjoint"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "at-most",
+        "value": "bounded:5"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "eventual"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "at-least",
+        "value": "eventual"
+      },
+      "effect": {
+        "relation": "at-most",
+        "value": "linearizable"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "is",
+        "value": "linearizable"
+      },
+      "effect": {
+        "relation": "at-least",
+        "value": "read-your-writes"
+      },
+      "region": "overlap"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "not",
+        "value": "eventual"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "read-your-writes"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "at-least",
+        "value": "read-your-writes"
+      },
+      "effect": {
+        "relation": "not",
+        "value": "eventual"
+      },
+      "region": "overlap"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "is",
+        "value": "bounded:5"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "bounded:5.0"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "at-least",
+        "value": "bounded:0"
+      },
+      "effect": {
+        "relation": "is",
+        "value": "read-your-writes"
+      },
+      "region": "within"
+    },
+    {
+      "predicate": "consistency",
+      "premise": {
+        "relation": "at-most",
+        "value": "read-your-writes"
+      },
+      "effect": {
+        "relation": "at-least",
+        "value": "bounded:3"
+      },
+      "region": "overlap"
+    }
+  ]
+}

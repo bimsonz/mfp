@@ -1,0 +1,27 @@
+{
+  "description": "A message under a profile names it.",
+  "against": "profile",
+  "message": {
+    "mfp": "0.2",
+    "kind": "observation",
+    "confidence": "high",
+    "category": "security",
+    "importance": "high",
+    "summary": "The webhook handler trusts the event's amount without re-reading it from the provider",
+    "cites": [
+      {
+        "kind": "anchor",
+        "path": "src/billing/webhook.ts",
+        "symbol": "handleInvoicePaid"
+      }
+    ],
+    "org.example.code-review/line": 42
+  },
+  "fix": [
+    {
+      "op": "add",
+      "path": "/profile",
+      "value": "https://example.org/mfp/profiles/code-review/0.2"
+    }
+  ]
+}

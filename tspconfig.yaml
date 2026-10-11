@@ -2,7 +2,7 @@ emit:
   - "@typespec/json-schema"
 options:
   "@typespec/json-schema":
-    emitter-output-dir: "{project-root}/schema/0.1"
+    emitter-output-dir: "{project-root}/schema/0.2"
     file-type: json
-    bundleId: schema.json
+    bundleId: mfp.schema.json
     int64-strategy: number

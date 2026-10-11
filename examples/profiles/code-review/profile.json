@@ -1,0 +1,42 @@
+{
+  "id": "https://example.org/mfp/profiles/code-review/0.2",
+  "mfp": "0.2",
+  "title": "Code review",
+  "prefix": "org.example.code-review",
+  "vocabularies": {
+    "verdict.outcome": [
+      "approve",
+      "request-changes",
+      "comment"
+    ],
+    "observation.category": [
+      "bug",
+      "security",
+      "performance",
+      "style",
+      "test-gap"
+    ]
+  },
+  "require": [
+    "verdict.residualRisk",
+    "observation.confidence"
+  ],
+  "members": [
+    {
+      "kind": "verdict",
+      "name": "org.example.code-review/blocking",
+      "schema": {
+        "type": "boolean"
+      },
+      "required": true
+    },
+    {
+      "kind": "observation",
+      "name": "org.example.code-review/line",
+      "schema": {
+        "type": "integer",
+        "minimum": 1
+      }
+    }
+  ]
+}

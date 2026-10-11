@@ -1,0 +1,28 @@
+{
+  "description": "A member under the profile's own prefix that it does not define is a misspelling.",
+  "against": "profile",
+  "message": {
+    "mfp": "0.2",
+    "kind": "observation",
+    "profile": "https://example.org/mfp/profiles/code-review/0.2",
+    "confidence": "high",
+    "category": "security",
+    "importance": "high",
+    "summary": "The webhook handler trusts the event's amount without re-reading it from the provider",
+    "cites": [
+      {
+        "kind": "anchor",
+        "path": "src/billing/webhook.ts",
+        "symbol": "handleInvoicePaid"
+      }
+    ],
+    "org.example.code-review/lin": 42
+  },
+  "fix": [
+    {
+      "op": "move",
+      "from": "/org.example.code-review~1lin",
+      "path": "/org.example.code-review~1line"
+    }
+  ]
+}

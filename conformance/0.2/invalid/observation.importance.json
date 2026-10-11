@@ -1,0 +1,29 @@
+{
+  "description": "Importance is low, medium or high.",
+  "against": "wire",
+  "message": {
+    "mfp": "0.2",
+    "kind": "observation",
+    "confidence": "high",
+    "category": "flaky-test",
+    "importance": "critical",
+    "summary": "revoke.test.ts fails about one run in ten: it races the session cache warm-up",
+    "cites": [
+      {
+        "kind": "tool-result",
+        "ref": "call_17"
+      },
+      {
+        "kind": "tool-result",
+        "ref": "call_21"
+      }
+    ]
+  },
+  "fix": [
+    {
+      "op": "replace",
+      "path": "/importance",
+      "value": "high"
+    }
+  ]
+}

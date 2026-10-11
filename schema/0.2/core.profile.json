@@ -1,0 +1,8 @@
+{
+  "id": "https://bimsonz.github.io/mfp/schema/0.2/core",
+  "mfp": "0.2",
+  "title": "MFP core",
+  "vocabularies": {
+    "verdict.outcome": ["accept", "revise", "reject", "defer"]
+  }
+}

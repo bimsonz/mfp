@@ -2,7 +2,11 @@
 
 Whether models emit MFP 0.2 validly, per kind, through each binding. A response is **valid** when, after `toWire`, it is a message of the task's kind that is valid on the wire and under the core producer schema, and cites only refs the task issued. Each cell is valid/n. See [README.md](README.md) for the method.
 
-This is run `2026-10-11-0002`. Each run's own report is `results/<run>/RESULTS.md`, beside its raw responses.
+This is run `2026-10-11-0002`. Each run's own report is beside its raw responses:
+
+- [`2026-10-11`](results/2026-10-11/RESULTS.md): every mode
+- [`2026-10-11-0002`](results/2026-10-11-0002/RESULTS.md): every mode, against `2026-10-11`
+- [`2026-10-11-0002-descriptions`](results/2026-10-11-0002-descriptions/RESULTS.md): tool only, against `2026-10-11-0002`
 
 ## Findings
 
@@ -46,7 +50,7 @@ At 05:02:28Z `wrangler dev` reloaded the local Worker. Its log says only "Reload
 
 ## Against `2026-10-11`
 
-The same models, tasks, samples and settings as run `2026-10-11`, both scored by the same scorer. Each cell is before → after. **Readable** is valid with no prose member one character long.
+The same models, tasks, samples and settings as run `2026-10-11`, in the modes this run measured, both scored by the same scorer. Each cell is before → after. **Readable** is valid with no prose member one character long.
 
 | Mode | What changed | Valid | Readable |
 |---|---|---|---|
@@ -61,6 +65,15 @@ The same models, tasks, samples and settings as run `2026-10-11`, both scored by
 | `@cf/meta/llama-3.3-70b-instruct-fp8-fast` | 31/54 → 36/54 | 34/54 → 43/54 | 18/54 → 19/54 |
 | `@cf/qwen/qwen3-30b-a3b-fp8` | 38/54 → 35/54 | 26/54 → 36/54 | 33/54 → 26/54 |
 | `@cf/ibm-granite/granite-4.0-h-micro` | 7/54 → 6/54 | 25/54 → 14/54 | 0/54 → 0/54 |
+
+| Kind | prompt: valid | json_schema: valid | tool: valid |
+|---|---|---|---|
+| intent | 18/45 → 17/45 | 18/45 → 19/45 | 8/45 → 6/45 |
+| premise | 21/45 → 22/45 | 2/45 → 26/45 | 16/45 → 16/45 |
+| decision | 41/45 → 40/45 | 41/45 → 41/45 | 18/45 → 18/45 |
+| observation | 36/45 → 36/45 | 38/45 → 34/45 | 21/45 → 12/45 |
+| stance | 34/45 → 37/45 | 9/45 → 39/45 | 29/45 → 25/45 |
+| verdict | 28/45 → 28/45 | 33/45 → 33/45 | 16/45 → 22/45 |
 
 ## Run
 

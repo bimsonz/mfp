@@ -113,7 +113,7 @@ A driver that cannot constrain decoding at all puts the emit schema in the promp
 ## MCP
 
 A server that receives MFP over MCP offers one tool per kind, named `mfp_<kind>`. Each tool's definition is the committed `mcp/<kind>.tool.json` (or its profile's):
-- `inputSchema` is the kind's emit schema without `mfp`, `kind` and `profile`, which the binding supplies. Its `$ref`s are inlined, because some tool formats drop `$defs` when they render a tool for a model. The exception is a kind with a recursive definition, which cannot be inlined: intent and premise, whose shapes nest, keep their `$defs`;
+- `inputSchema` is the kind's emit schema without `mfp`, `kind` and `profile`, which the binding supplies. Its `$ref`s are inlined, because some tool formats drop `$defs` when they render a tool for a model; an inlined member keeps both its own description and its type's. The exception is a kind with a recursive definition, which cannot be inlined: intent and premise, whose shapes nest, keep their `$defs`;
 - `outputSchema` is the receiver's reply, `{ref}`;
 - `description` says what the model reports and when to call the tool. A server MAY add to a description, but SHOULD NOT remove what it says.
 

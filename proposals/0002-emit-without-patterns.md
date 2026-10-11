@@ -26,7 +26,7 @@ The first emit eval ([`2026-10-11`](../eval/results/2026-10-11/RESULTS.md); five
 In [Bindings](../docs/specification/0.2/bindings.md):
 - The emit form's keywords no longer include `pattern`. Each definition whose wire form has a pattern states its grammar in its `description`. The wire schema still enforces every pattern when the driver validates what the model emitted.
 - A driver that asks for structured output SHOULD also put the emit schema in the prompt.
-- An MCP tool's `inputSchema` inlines its `$ref`s, unless the kind has a recursive definition. In the core, intent and premise do: a shape can contain a shape. They keep their `$defs`.
+- An MCP tool's `inputSchema` inlines its `$ref`s, unless the kind has a recursive definition. In the core, intent and premise do: a shape can contain a shape. They keep their `$defs`. An inlined member keeps both its own description and its type's.
 
 The wire schema, the producer schema and the messages they accept do not change.
 
@@ -63,12 +63,13 @@ Run [`2026-10-11-0002`](../eval/results/2026-10-11-0002/RESULTS.md) used the sam
 
 - **`json_schema` is fixed.** No reply ran to the token limit (43 before) and none timed out (27 before). No valid message has a one-character prose member.
 - **Prompt mode did not move.**
-- **Tool mode did not improve.**
-  - The four inlined kinds went from 84/180 to 77/180, and the two that were not inlined from 24/90 to 22/90.
-  - `gpt-oss-120b` still writes nested objects as prose (4 → 5 of 54), so dropped `$defs` were not its problem. Inlining stays, because a tool with no `$defs` suits any client, but it has no measured benefit.
-  - Most of the fall is one model's observation `category`, which failed 7 times in 9 against 2 before: `flaky test` where a hyphenated token is wanted. The pattern was a cue in the tool that the description has not replaced.
+- **Tool mode fell, because of a bug.**
+  - Inlining dropped the description of a member's type wherever the member had its own: the observation tool's `category` lost its grammar, and the stance tool lost what a ref and a piece of text are.
+  - Run [`2026-10-11-0002-descriptions`](../eval/results/2026-10-11-0002-descriptions/RESULTS.md) measured the fix (5c988b0), tool mode only: 99/270 → 110/270, against 108/270 before this proposal.
+  - `category` failures went from 9 (first run) to 20 (0002) to 0 (the fix). So stripping `pattern` cost tool mode nothing; losing the descriptions did.
+- **Inlining did not help the model it was for.** `gpt-oss-120b` still writes nested objects as prose (4 → 5 → 6 of 54), so dropped `$defs` were not its problem. Inlining stays, because a tool with no `$defs` suits any client, but it has no measured benefit.
 
-Open before this proposal can be Final: whether to state each grammar's regular expression in its description, so a model that read the pattern still can.
+Open before this proposal can be Final: whether to state each grammar's regular expression in its description as well as its words.
 
 ## Not in this proposal
 

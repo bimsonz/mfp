@@ -1,5 +1,5 @@
 // Scores a run's raw responses and writes its report, results/<run>/RESULTS.md.
-// The latest run's report is also eval/RESULTS.md.
+// The latest run that measured every mode is also written as eval/RESULTS.md.
 //
 //   node eval/summarize.ts [--date <run>]
 //
@@ -8,7 +8,7 @@
 // run.json names a baseline is compared with it, rescored the same way.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
-import type { Mode, Task } from "./requests.ts";
+import { type Mode, MODES, type Task } from "./requests.ts";
 import { CLASSES, type Class, NO_CITATION, oneCharacterProse, score } from "./score.ts";
 
 /** USD per 1,000 neurons, the Workers AI price on the run date. */
@@ -89,7 +89,13 @@ out(
   "Whether models emit MFP 0.2 validly, per kind, through each binding. A response is **valid** when, after `toWire`, it is a message of the task's kind that is valid on the wire and under the core producer schema, and cites only refs the task issued. Each cell is valid/n. See [README.md]({eval}README.md) for the method.",
 );
 out();
-out(`This is run \`${values.date}\`. Each run's own report is \`results/<run>/RESULTS.md\`, beside its raw responses.`);
+out(`This is run \`${values.date}\`. Each run's own report is beside its raw responses:`);
+out();
+for (const name of runs) {
+  const { modes: ran, baseline } = JSON.parse(readFileSync(new URL("run.json", dirOf(name)), "utf8"));
+  const what = [ran.length === MODES.length ? "every mode" : `${ran.join(", ")} only`, ...(baseline === undefined ? [] : [`against \`${baseline}\``])];
+  out(`- [\`${name}\`]({eval}results/${name}/RESULTS.md): ${what.join(", ")}`);
+}
 out();
 // What the numbers show, written by whoever ran the eval, from results/<date>/notes.md.
 if (existsSync(new URL("notes.md", dir))) {
@@ -109,7 +115,7 @@ if (run.baseline !== undefined) {
   out(`## Against \`${run.baseline}\``);
   out();
   out(
-    `The same models, tasks, samples and settings as run \`${run.baseline}\`, both scored by the same scorer. Each cell is before → after. **Readable** is valid with no prose member one character long.`,
+    `The same models, tasks, samples and settings as run \`${run.baseline}\`, in the modes this run measured, both scored by the same scorer. Each cell is before → after. **Readable** is valid with no prose member one character long.`,
   );
   out();
   table(
@@ -120,6 +126,17 @@ if (run.baseline !== undefined) {
     ["Model", ...modes.map((mode) => `${mode}: valid`)],
     models.map((m) => [`\`${m}\``, ...modes.map((mode) => change(valid, { model: m, mode }))]),
   );
+  table(
+    ["Kind", ...modes.map((mode) => `${mode}: valid`)],
+    kinds.map((kind) => [kind, ...modes.map((mode) => change(valid, { kind, mode }))]),
+  );
+  const unmeasured = Object.entries(run.changes ?? {}).filter(([mode]) => !modes.includes(mode as Mode));
+  if (unmeasured.length > 0) {
+    out("The change also reaches modes this run did not measure:");
+    out();
+    for (const [mode, what] of unmeasured) out(`- ${mode}: ${what}`);
+    out();
+  }
 }
 
 out("## Run");
@@ -244,6 +261,8 @@ table(
 
 const report = `${lines.join("\n").trimEnd()}\n`;
 writeFileSync(new URL("RESULTS.md", dir), report.replaceAll("{eval}", "../../"));
-const latest = values.date === runs.at(-1);
+// The top-level report is the latest run that measured every mode.
+const complete = runs.filter((name) => JSON.parse(readFileSync(new URL("run.json", dirOf(name)), "utf8")).modes.length === MODES.length);
+const latest = values.date === complete.at(-1);
 if (latest) writeFileSync(new URL("eval/RESULTS.md", root), report.replaceAll("{eval}", ""));
 console.log(`scored ${rows.length} responses from ${values.date}; wrote results/${values.date}/RESULTS.md${latest ? " and eval/RESULTS.md" : ""}`);

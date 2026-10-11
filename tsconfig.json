@@ -10,7 +10,14 @@
     "verbatimModuleSyntax": true,
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["conformance/**/*.ts", "scripts/**/*.ts", "lib/**/*.d.ts"]
+  "include": [
+    "conformance/**/*.ts",
+    "scripts/**/*.ts",
+    "eval/**/*.ts",
+    "lib/**/*.d.ts"
+  ]
 }

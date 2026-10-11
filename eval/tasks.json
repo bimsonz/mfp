@@ -1,0 +1,152 @@
+{
+  "description": "The emit eval's fixed tasks: a short coding situation, the kind of report asked for, and the identifiers the driver issued, which are the only refs a report may cite.",
+  "tasks": [
+    {
+      "id": "intent.revoke-access",
+      "kind": "intent",
+      "situation": "Your task: make removing a collaborator take effect on their very next request. You will edit src/collaborators/revoke.ts. Tool result [call_01] shows src/authz/check.ts, owned by another team: requirePermission re-reads the user's roles from the database on every request. Message [msg_02] from the owner: revocation must never wait for a session to end.",
+      "issued": [
+        "call_01",
+        "msg_02"
+      ]
+    },
+    {
+      "id": "intent.webhook-retries",
+      "kind": "intent",
+      "situation": "Your task: add retries with backoff to outbound billing webhooks in src/billing/webhook-sender.ts. The receiving handler, handleInvoicePaid in the payments team's service, is not yours. Tool result [call_03] shows it de-duplicates deliveries by event id before acting.",
+      "issued": [
+        "call_03"
+      ]
+    },
+    {
+      "id": "intent.user-avatar",
+      "kind": "intent",
+      "situation": "Your task: add an optional avatarUrl field to the GET /users/:id response, in src/api/users.ts. The mobile client, which you do not own, reads the response's id (a string) and its email (a string, or null) and ignores other fields; tool result [call_04] shows its parser.",
+      "issued": [
+        "call_04"
+      ]
+    },
+    {
+      "id": "premise.permission-latency",
+      "kind": "premise",
+      "situation": "You are partway through a change that calls the permissions service on every request. You now rely on that service answering within 50 ms in production; tool result [call_07] shows its p99 latency there is 31 ms.",
+      "issued": [
+        "call_07"
+      ]
+    },
+    {
+      "id": "premise.migrate-first",
+      "kind": "premise",
+      "situation": "You are adding a column that the new code reads at startup. You rely on database migrations running before the application deploys, as the deploy pipeline does today; message [msg_05] describes the pipeline.",
+      "issued": [
+        "msg_05"
+      ]
+    },
+    {
+      "id": "premise.single-writer",
+      "kind": "premise",
+      "situation": "Your change caches rows of the invoices table in memory. You rely on billing-service being the only writer to that table, so nothing else can make the cache stale; tool result [call_08] lists the table's writers.",
+      "issued": [
+        "call_08"
+      ]
+    },
+    {
+      "id": "decision.permission-cache",
+      "kind": "decision",
+      "situation": "You had to choose between caching permission checks for a session and keeping them per request. You kept them per request: revocation must take effect immediately, and the load test in tool result [call_11] shows per-request checks add only 4 ms. You could undo this cheaply later.",
+      "issued": [
+        "call_11"
+      ]
+    },
+    {
+      "id": "decision.email-queue",
+      "kind": "decision",
+      "situation": "You decided to send transactional emails through a queue instead of calling the email provider inline, because the provider rate-limits at 10 requests per second (documentation in message [msg_06]). You also considered calling inline with retries, and a cron job that sends in batches every minute. Moving to a queue would take a day to undo.",
+      "issued": [
+        "msg_06"
+      ]
+    },
+    {
+      "id": "decision.date-library",
+      "kind": "decision",
+      "situation": "You needed a date parsing library and picked date-fns over moment. Tool result [call_14] shows date-fns adds 9 kB to the bundle against 72 kB for moment, and moment is in maintenance mode.",
+      "issued": [
+        "call_14"
+      ]
+    },
+    {
+      "id": "observation.flaky-test",
+      "kind": "observation",
+      "situation": "While running the suite, src/collaborators/revoke.test.ts failed twice in twenty runs (tool results [call_21] and [call_22]). Both failures happen when the test runs before the session cache has warmed up.",
+      "issued": [
+        "call_21",
+        "call_22"
+      ]
+    },
+    {
+      "id": "observation.trusted-amount",
+      "kind": "observation",
+      "situation": "Reading src/billing/webhook.ts for an unrelated change, you notice that handleInvoicePaid trusts the amount field in the incoming event and never re-reads the invoice from the payment provider (tool result [call_25]).",
+      "issued": [
+        "call_25"
+      ]
+    },
+    {
+      "id": "observation.dead-module",
+      "kind": "observation",
+      "situation": "Tool result [call_30], a repository-wide search, shows that nothing imports src/legacy/export.ts. It is 400 lines long and its last change was two years ago.",
+      "issued": [
+        "call_30"
+      ]
+    },
+    {
+      "id": "stance.followed",
+      "kind": "stance",
+      "situation": "You were shown a precedent, decision [dec_01]: permission evaluation stays per request, so that revocation is immediate. Your change adds an audit log line to requirePermission and keeps every check per request.",
+      "issued": [
+        "dec_01"
+      ]
+    },
+    {
+      "id": "stance.distinguished",
+      "kind": "stance",
+      "situation": "You were shown a precedent, decision [dec_02]: all writes to the invoices table go through billing-service. Your change writes a read-only nightly copy of invoices to a separate reporting table, invoices_report, and never writes to invoices itself.",
+      "issued": [
+        "dec_02"
+      ]
+    },
+    {
+      "id": "stance.overrule",
+      "kind": "stance",
+      "situation": "You were shown a precedent, decision [dec_03]: no third-party date libraries; use the platform's Date. Tool result [call_40] lists eleven open bugs caused by hand-written time zone arithmetic, and you think the precedent should be overruled.",
+      "issued": [
+        "dec_03",
+        "call_40"
+      ]
+    },
+    {
+      "id": "verdict.session-cache",
+      "kind": "verdict",
+      "situation": "You are reviewing a change. Its diff, in tool result [call_50], caches permission checks for the whole session and never evicts the cache when a collaborator is removed. Its tests pass. Give your verdict on the change.",
+      "issued": [
+        "call_50"
+      ]
+    },
+    {
+      "id": "verdict.rename",
+      "kind": "verdict",
+      "situation": "You are reviewing a change that renames an internal helper, formatCents to formatMinorUnits. Tool result [call_51] shows every call site updated, the type checker clean and all tests passing. Give your verdict on the change.",
+      "issued": [
+        "call_51"
+      ]
+    },
+    {
+      "id": "verdict.disable-tls",
+      "kind": "verdict",
+      "situation": "You are reviewing a change that fixes a flaky integration test by turning off TLS certificate verification for every outbound HTTP client in the service (diff in tool result [call_52]). Give your verdict on the change.",
+      "issued": [
+        "call_52"
+      ]
+    }
+  ]
+}

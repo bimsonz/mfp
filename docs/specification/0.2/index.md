@@ -75,7 +75,12 @@ MFP defines four conformance classes. An implementation names the ones it claims
 - **Profile:** a document that narrows the core for one domain.
   - It MUST pass the profile check in [Extensibility](extensibility.md#profiles).
 
-The conformance suite in [`conformance/`](../../../conformance) holds:
+Conformance has two layers.
+
+The **schema conformance suite**, in [`conformance/`](../../../conformance), holds:
 - valid and invalid messages for every kind, each invalid message with exactly one defect and the single operation that fixes it;
 - the lattice vectors, each with the outcome a comparator must produce;
-- the profile check, run against an example profile.
+- the profile check, run against an example profile;
+- the model-facing schemas, tools and transform.
+
+The **emit eval**, in [`eval/`](../../../eval), asks real models to report in MFP for a fixed set of tasks, through each binding. It measures how often what they emit is valid, per kind. Its results are in [`eval/RESULTS.md`](../../../eval/RESULTS.md).

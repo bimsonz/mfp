@@ -1,0 +1,11 @@
+// The emit eval's Worker: it runs one Workers AI inference per request.
+// Run it with `pnpm eval:worker` (wrangler dev). The AI binding is remote in
+// dev, so it runs on the account wrangler is logged in to; nothing is deployed.
+// Set CLOUDFLARE_ACCOUNT_ID to choose the account.
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "mfp-eval",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "ai": { "binding": "AI" }
+}

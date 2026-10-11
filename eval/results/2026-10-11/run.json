@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-11",
+  "models": [
+    "@cf/moonshotai/kimi-k2.6",
+    "@cf/openai/gpt-oss-120b",
+    "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "@cf/qwen/qwen3-30b-a3b-fp8",
+    "@cf/ibm-granite/granite-4.0-h-micro"
+  ],
+  "modes": [
+    "prompt",
+    "json_schema",
+    "tool"
+  ],
+  "samples": 3,
+  "tasks": 18,
+  "settings": {
+    "max_tokens": 10000,
+    "temperature": "not sent (model default)",
+    "top_p": "not sent (model default)"
+  },
+  "wrangler": "4.149.0",
+  "compatibility_date": "2026-09-01",
+  "prior": 39,
+  "attempts": 856
+}

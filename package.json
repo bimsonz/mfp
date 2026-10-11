@@ -39,7 +39,10 @@
     "check:drift": "pnpm build && git diff --exit-code -- schema && test -z \"$(git ls-files --others --exclude-standard -- schema)\"",
     "conformance": "vitest run",
     "typecheck": "tsc",
-    "lint": "oxlint"
+    "lint": "oxlint",
+    "eval:worker": "wrangler dev --config eval/worker/wrangler.jsonc --port 8787",
+    "eval:run": "node eval/run.ts",
+    "eval:summarize": "node eval/summarize.ts"
   },
   "peerDependencies": {
     "@typespec/compiler": "^1.17.0",
@@ -55,6 +58,7 @@
     "@typespec/json-schema": "1.17.0",
     "oxlint": "1.87.0",
     "typescript": "7.0.2",
-    "vitest": "5.0.3"
+    "vitest": "5.0.3",
+    "wrangler": "4.149.0"
   }
 }

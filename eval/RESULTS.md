@@ -7,6 +7,7 @@ This is run `2026-10-11-0002`. Each run's own report is beside its raw responses
 - [`2026-10-11`](results/2026-10-11/RESULTS.md): every mode
 - [`2026-10-11-0002`](results/2026-10-11-0002/RESULTS.md): every mode, against `2026-10-11`
 - [`2026-10-11-0002-descriptions`](results/2026-10-11-0002-descriptions/RESULTS.md): tool only, against `2026-10-11-0002`
+- [`2026-10-11-0002-grammars`](results/2026-10-11-0002-grammars/RESULTS.md): tool only, against `2026-10-11-0002-descriptions`
 
 ## Findings
 
@@ -52,11 +53,11 @@ At 05:02:28Z `wrangler dev` reloaded the local Worker. Its log says only "Reload
 
 The same models, tasks, samples and settings as run `2026-10-11`, in the modes this run measured, both scored by the same scorer. Each cell is before → after. **Readable** is valid with no prose member one character long.
 
-| Mode | What changed | Valid | Readable |
-|---|---|---|---|
-| prompt | Emit schema without `pattern`; each grammar is in its description | 178/270 → 180/270 | 178/270 → 180/270 |
-| json_schema | Emit schema without `pattern`, and the schema in the system prompt as well as in `response_format` | 141/270 → 192/270 | 3/270 → 192/270 |
-| tool | Tool input without `pattern`; `$ref`s inlined for decision, observation, stance and verdict (intent and premise are recursive and keep `$defs`) | 108/270 → 99/270 | 108/270 → 99/270 |
+| Mode | What changed | Valid | Readable | Grammar failures |
+|---|---|---|---|---|
+| prompt | Emit schema without `pattern`; each grammar is in its description | 178/270 → 180/270 | 178/270 → 180/270 | 40/270 → 40/270 |
+| json_schema | Emit schema without `pattern`, and the schema in the system prompt as well as in `response_format` | 141/270 → 192/270 | 3/270 → 192/270 | 0/270 → 49/270 |
+| tool | Tool input without `pattern`; `$ref`s inlined for decision, observation, stance and verdict (intent and premise are recursive and keep `$defs`) | 108/270 → 99/270 | 108/270 → 99/270 | 28/270 → 39/270 |
 
 | Model | prompt: valid | json_schema: valid | tool: valid |
 |---|---|---|---|

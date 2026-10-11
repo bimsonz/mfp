@@ -7,6 +7,7 @@ This is run `2026-10-11-0002-descriptions`. Each run's own report is beside its 
 - [`2026-10-11`](../../results/2026-10-11/RESULTS.md): every mode
 - [`2026-10-11-0002`](../../results/2026-10-11-0002/RESULTS.md): every mode, against `2026-10-11`
 - [`2026-10-11-0002-descriptions`](../../results/2026-10-11-0002-descriptions/RESULTS.md): tool only, against `2026-10-11-0002`
+- [`2026-10-11-0002-grammars`](../../results/2026-10-11-0002-grammars/RESULTS.md): tool only, against `2026-10-11-0002-descriptions`
 
 ## Findings
 
@@ -36,9 +37,9 @@ Cells are small: 54 per model, 45 per kind.
 
 The same models, tasks, samples and settings as run `2026-10-11-0002`, in the modes this run measured, both scored by the same scorer. Each cell is before → after. **Readable** is valid with no prose member one character long.
 
-| Mode | What changed | Valid | Readable |
-|---|---|---|---|
-| tool | An inlined tool keeps the description of each type it inlines (observation and stance had lost theirs) | 99/270 → 110/270 | 99/270 → 110/270 |
+| Mode | What changed | Valid | Readable | Grammar failures |
+|---|---|---|---|---|
+| tool | An inlined tool keeps the description of each type it inlines (observation and stance had lost theirs) | 99/270 → 110/270 | 99/270 → 110/270 | 39/270 → 23/270 |
 
 | Model | tool: valid |
 |---|---|

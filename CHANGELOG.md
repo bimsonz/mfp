@@ -15,7 +15,7 @@ MFP 0.2: the language a model speaks back.
 
 - A message is flat, and its wire version is `0.2`.
 - Propositions are a union with one shape per predicate, and premises and effects have separate positions.
-- The emit form has no `pattern`, and an MCP tool's input inlines its refs unless the kind is recursive, by [proposal 0002](proposals/0002-emit-without-patterns.md), in draft. A structured-output driver also puts the schema in the prompt.
+- The emit form has no `pattern`, by [proposal 0002](proposals/0002-emit-without-patterns.md), in draft. Each grammar is in its description, in words, and as its regular expression if it is anchored. An MCP tool's input inlines its refs unless the kind is recursive, and keeps every description. A structured-output driver also puts the schema in the prompt.
 
 ### Added
 
@@ -25,7 +25,7 @@ MFP 0.2: the language a model speaks back.
 - Absolute, versioned schema ids; BCP 14 language; a security chapter; and the media type `application/vnd.mfp+json`.
 - A structured-output schema and an MCP tool per kind, the `toWire` and `toEmit` transform, and the bindings chapter.
 - Valid examples and invalid cases for every kind.
-- The emit eval, which measures how often models emit valid MFP through each binding, and its first two runs.
+- The emit eval, which measures how often models emit valid MFP through each binding, and its runs.
 - This changelog, contributing guidelines, a code of conduct, a security policy and the proposals process.
 
 ## [0.1.0-pre.3] - 2026-10-10

@@ -4,9 +4,9 @@
 - **Status:** Draft
 - **Created:** 2026-10-11
 - **Author:** Zach Bimson (@bimsonz)
-- **Implementation:** e592831
-- **Conformance:** T19 in `conformance/emit.test.ts`; the pattern-only cases of T9 (`intent.freshness-typo`, `intent.premise-invalidation`, `intent.short-commit`, `premise.scope-grammar`, `premise.subject-case`)
-- **Emit eval:** [`2026-10-11`](../eval/results/2026-10-11/RESULTS.md) before, [`2026-10-11-0002`](../eval/results/2026-10-11-0002/RESULTS.md) after
+- **Implementation:** e592831, 5c988b0, 44765fc
+- **Conformance:** T19 and T10 in `conformance/emit.test.ts`; the pattern-only cases of T9 (`intent.freshness-typo`, `intent.premise-invalidation`, `intent.short-commit`, `premise.scope-grammar`, `premise.subject-case`)
+- **Emit eval:** [`2026-10-11`](../eval/results/2026-10-11/RESULTS.md) before; [`2026-10-11-0002`](../eval/results/2026-10-11-0002/RESULTS.md), [`2026-10-11-0002-descriptions`](../eval/results/2026-10-11-0002-descriptions/RESULTS.md) and [`2026-10-11-0002-grammars`](../eval/results/2026-10-11-0002-grammars/RESULTS.md) after
 
 ## Abstract
 
@@ -69,7 +69,16 @@ Run [`2026-10-11-0002`](../eval/results/2026-10-11-0002/RESULTS.md) used the sam
   - `category` failures went from 9 (first run) to 20 (0002) to 0 (the fix). So stripping `pattern` cost tool mode nothing; losing the descriptions did.
 - **Inlining did not help the model it was for.** `gpt-oss-120b` still writes nested objects as prose (4 → 5 → 6 of 54), so dropped `$defs` were not its problem. Inlining stays, because a tool with no `$defs` suits any client, but it has no measured benefit.
 
-Open before this proposal can be Final: whether to state each grammar's regular expression in its description as well as its words.
+- **Each whole-string grammar's regular expression, beside its words, halves the grammar failures that remain.** Run [`2026-10-11-0002-grammars`](../eval/results/2026-10-11-0002-grammars/RESULTS.md) (44765fc), tool mode only, against the fix above: schema failures that name a grammar went from 23 to 12, and tool mode from 110/270 to 115/270. Before this proposal, with patterns, there were 28. The change also reaches prompt and `json_schema`, unmeasured.
+
+Tool mode by run, n=270:
+
+| Run | Tool schemas | Valid | Grammar failures |
+|---|---|---|---|
+| `2026-10-11` | With `pattern` | 108 | 28 |
+| `2026-10-11-0002` | No `pattern`; inlined, descriptions lost | 99 | 39 |
+| `2026-10-11-0002-descriptions` | No `pattern`; descriptions kept | 110 | 23 |
+| `2026-10-11-0002-grammars` | And each grammar's regular expression | 115 | 12 |
 
 ## Not in this proposal
 

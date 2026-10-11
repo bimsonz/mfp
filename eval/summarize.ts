@@ -118,9 +118,11 @@ if (run.baseline !== undefined) {
     `The same models, tasks, samples and settings as run \`${run.baseline}\`, in the modes this run measured, both scored by the same scorer. Each cell is before → after. **Readable** is valid with no prose member one character long.`,
   );
   out();
+  // A schema failure that names a pattern: a string outside its grammar, caught on the wire.
+  const grammar = (xs: Row[]) => xs.filter((r) => r.class === "schema" && /must match pattern/.test(r.detail ?? "")).length;
   table(
-    ["Mode", "What changed", "Valid", "Readable"],
-    modes.map((mode) => [mode, run.changes?.[mode] ?? "nothing", change(valid, { mode }), change(readable, { mode })]),
+    ["Mode", "What changed", "Valid", "Readable", "Grammar failures"],
+    modes.map((mode) => [mode, run.changes?.[mode] ?? "nothing", change(valid, { mode }), change(readable, { mode }), change(grammar, { mode })]),
   );
   table(
     ["Model", ...modes.map((mode) => `${mode}: valid`)],

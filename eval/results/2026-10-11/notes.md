@@ -51,5 +51,5 @@ There are 29:
 ### Calls and cost
 
 - The harness counted 920 inference calls: 881 in this run, retries included, and 39 before it (the smoke test and the dry run).
-- The account's Workers AI analytics show 922 inferences of these five models, all on 11 October between 03:00 and 05:00 UTC, with no other use since 1 October. They total 199,803 neurons, $2.20 at the list price.
+- The account's Workers AI analytics show 922 inferences of these five models, all on 11 October between 03:00 and 05:00 UTC. They total 199,803 neurons, $2.20 at the list price.
 - The Cost table below sums the usage each scored response reports: 186,507 neurons, $2.05. The 100 attempts that reported none are not in it: retried attempts and the 29 provider errors.

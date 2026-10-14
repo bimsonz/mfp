@@ -131,7 +131,7 @@ describe("T18: the changelog", () => {
   });
 });
 
-describe("T21: every contact is filled in", () => {
+describe("T20: every contact is filled in", () => {
   // Spelled in two parts, so this file does not hold the marker it looks for.
   const MARKER = ["CONTACT", "PENDING"].join("-");
   it("leaves no contact pending", () => {

@@ -6,7 +6,7 @@
     "tool": "Tool input without `pattern`; `$ref`s inlined for decision, observation, stance and verdict (intent and premise are recursive and keep `$defs`)"
   },
   "date": "2026-10-11-0002",
-  "commit": "e592831e80ec41d53c43c526a2d4ac3c289021ff",
+  "commit": "a09cb639a32f8d1498d4cdda1dbe02b6fc79d533",
   "models": [
     "@cf/moonshotai/kimi-k2.6",
     "@cf/openai/gpt-oss-120b",

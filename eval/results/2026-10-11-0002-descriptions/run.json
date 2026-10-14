@@ -4,7 +4,7 @@
     "tool": "An inlined tool keeps the description of each type it inlines (observation and stance had lost theirs)"
   },
   "date": "2026-10-11-0002-descriptions",
-  "commit": "5c988b0f94ac9685b2ccf90866a044dce7ebe924",
+  "commit": "52440eaa52d2981ea570261d4355121c80354a06",
   "models": [
     "@cf/moonshotai/kimi-k2.6",
     "@cf/openai/gpt-oss-120b",

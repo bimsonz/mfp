@@ -6,7 +6,7 @@
     "json_schema": "Each whole-string grammar's regular expression in its description, beside its words"
   },
   "date": "2026-10-11-0002-grammars",
-  "commit": "44765fcfda696de0aa11d6057dfa5ffc3d2fb19a",
+  "commit": "ac9be48b9200c192c1f2bfd19144761c3b36aedf",
   "models": [
     "@cf/moonshotai/kimi-k2.6",
     "@cf/openai/gpt-oss-120b",

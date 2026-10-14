@@ -4,7 +4,7 @@
 - **Status:** Final
 - **Created:** 2026-10-11
 - **Author:** Zach Bimson (@bimsonz)
-- **Implementation:** 7ab3a2b
+- **Implementation:** 3645470
 - **Conformance:** `intent.evidence-class`, `verdict.author`
 
 ## Abstract

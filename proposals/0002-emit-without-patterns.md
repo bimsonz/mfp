@@ -4,7 +4,7 @@
 - **Status:** Final
 - **Created:** 2026-10-11
 - **Author:** Zach Bimson (@bimsonz)
-- **Implementation:** e592831, 5c988b0, 44765fc
+- **Implementation:** a09cb63, 52440ea, ac9be48
 - **Conformance:** T19 and T10 in `conformance/emit.test.ts`; the pattern-only cases of T9 (`intent.freshness-typo`, `intent.premise-invalidation`, `intent.short-commit`, `premise.scope-grammar`, `premise.subject-case`)
 - **Emit eval:** [`2026-10-11`](../eval/results/2026-10-11/RESULTS.md) before; [`2026-10-11-0002`](../eval/results/2026-10-11-0002/RESULTS.md), [`2026-10-11-0002-descriptions`](../eval/results/2026-10-11-0002-descriptions/RESULTS.md) and [`2026-10-11-0002-grammars`](../eval/results/2026-10-11-0002-grammars/RESULTS.md) after
 
@@ -65,11 +65,11 @@ Run [`2026-10-11-0002`](../eval/results/2026-10-11-0002/RESULTS.md) used the sam
 - **Prompt mode did not move.**
 - **Tool mode fell, because of a bug.**
   - Inlining dropped the description of a member's type wherever the member had its own: the observation tool's `category` lost its grammar, and the stance tool lost what a ref and a piece of text are.
-  - Run [`2026-10-11-0002-descriptions`](../eval/results/2026-10-11-0002-descriptions/RESULTS.md) measured the fix (5c988b0), tool mode only: 99/270 → 110/270, against 108/270 before this proposal.
+  - Run [`2026-10-11-0002-descriptions`](../eval/results/2026-10-11-0002-descriptions/RESULTS.md) measured the fix (52440ea), tool mode only: 99/270 → 110/270, against 108/270 before this proposal.
   - `category` failures went from 9 (first run) to 20 (0002) to 0 (the fix). So stripping `pattern` cost tool mode nothing; losing the descriptions did.
 - **Inlining did not help the model it was for.** `gpt-oss-120b` still writes nested objects as prose (4 → 5 → 6 of 54), so dropped `$defs` were not its problem. Inlining stays, because a tool with no `$defs` suits any client, but it has no measured benefit.
 
-- **Each whole-string grammar's regular expression, beside its words, halves the grammar failures that remain.** Run [`2026-10-11-0002-grammars`](../eval/results/2026-10-11-0002-grammars/RESULTS.md) (44765fc), tool mode only, against the fix above: schema failures that name a grammar went from 23 to 12, and tool mode from 110/270 to 115/270. Before this proposal, with patterns, there were 28. The change also reaches prompt and `json_schema`, unmeasured.
+- **Each whole-string grammar's regular expression, beside its words, halves the grammar failures that remain.** Run [`2026-10-11-0002-grammars`](../eval/results/2026-10-11-0002-grammars/RESULTS.md) (ac9be48), tool mode only, against the fix above: schema failures that name a grammar went from 23 to 12, and tool mode from 110/270 to 115/270. Before this proposal, with patterns, there were 28. The change also reaches prompt and `json_schema`, unmeasured.
 
 Tool mode by run, n=270:
 

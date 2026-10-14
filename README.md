@@ -4,7 +4,7 @@ The language a model speaks back to whatever drives it: a small, fixed way for a
 
 > MCP carries what a model asks of tools. MFP is what a model reports back, often carried as MCP tool calls.
 
-Status: `0.2.0`, released 2026-10-11.
+Status: `0.2.1`, released 2026-10-14.
 
 ## A message
 

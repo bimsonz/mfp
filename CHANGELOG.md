@@ -4,6 +4,12 @@ Notable changes to MFP. The format is [Keep a Changelog](https://keepachangelog.
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-14
+
+### Fixed
+
+- The package ships the emit form and the MCP tool inputs, `schema/0.2/emit/` and `schema/0.2/mcp/`, which the README points to: 0.2.0's files left them out. The wire is unchanged.
+
 ## [0.2.0] - 2026-10-11
 
 MFP 0.2: the language a model speaks back.
@@ -48,7 +54,8 @@ MFP 0.2: the language a model speaks back.
 
 - The MFP 0.1 schema, published as a TypeSpec library.
 
-[Unreleased]: https://github.com/bimsonz/mfp/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/bimsonz/mfp/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/bimsonz/mfp/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/bimsonz/mfp/compare/v0.1.0-pre.3...v0.2.0
 [0.1.0-pre.3]: https://github.com/bimsonz/mfp/compare/v0.1.0-pre.2...v0.1.0-pre.3
 [0.1.0-pre.2]: https://github.com/bimsonz/mfp/compare/v0.1.0-pre...v0.1.0-pre.2

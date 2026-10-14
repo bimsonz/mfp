@@ -1,6 +1,6 @@
 {
   "name": "@bimsonz/mfp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "MFP, the Model Feedback Protocol: the language a model speaks back to whatever drives it",
   "license": "MIT",
   "type": "module",
@@ -31,6 +31,8 @@
   "files": [
     "schema/0.2/main.tsp",
     "schema/0.2/*.json",
+    "schema/0.2/emit",
+    "schema/0.2/mcp",
     "lib",
     "bin"
   ],

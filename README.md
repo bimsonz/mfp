@@ -2,7 +2,7 @@
 
 MFP (Model Feedback Protocol) is a small, typed message format for what a model reports back to whatever drives it: its intent, the premises it relies on, its decisions, observations, stances and verdicts. Premises and effects are typed propositions on ordered predicates, so a consumer can tell when one change's effect contradicts what another relies on. Where MCP carries what a model asks of its tools, MFP carries what it reports back, often as MCP tool calls.
 
-Current version: `0.2.2`. See [CHANGELOG.md](CHANGELOG.md).
+Current version: `0.2.3`. See [CHANGELOG.md](CHANGELOG.md).
 
 ## Features
 

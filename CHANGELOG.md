@@ -4,6 +4,14 @@ Notable changes to MFP. The format is [Keep a Changelog](https://keepachangelog.
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-10-14
+
+Documentation only. The wire, the schemas and the libraries are unchanged.
+
+### Changed
+
+- The README is in the usual sections: what MFP is, its features, installation, a quick start, the documentation, the repository's layout, development, contributing and the licence.
+
 ## [0.2.2] - 2026-10-14
 
 Documentation and packaging only. The wire, the schemas and the libraries are unchanged.
@@ -62,7 +70,8 @@ MFP 0.2: the language a model speaks back.
 
 - The MFP 0.1 schema, published as a TypeSpec library.
 
-[Unreleased]: https://github.com/bimsonz/mfp/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/bimsonz/mfp/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/bimsonz/mfp/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/bimsonz/mfp/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/bimsonz/mfp/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/bimsonz/mfp/compare/v0.1.0-pre.3...v0.2.0
